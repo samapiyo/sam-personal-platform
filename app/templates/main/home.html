@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Home · SAMTECH SOLUTIONS{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+  <div>
+
+    <p class="eyebrow">
+      PERSONAL • BUSINESS • BLOG • PORTFOLIO
+    </p>
+
+    <h1>
+      One professional platform for everything I create.
+    </h1>
+
+    <p class="lead">
+      Showcase projects, publish ideas, offer digital services
+      and share useful opportunities.
+    </p>
+
+    <div class="actions">
+
+      <a class="button" href="{{ url_for('main.about') }}">
+        Explore
+      </a>
+
+      <a class="button secondary" href="{{ url_for('main.contact') }}">
+        Contact
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="section">
+
+  <div class="section-head">
+
+    <div>
+
+      <p class="eyebrow">
+        WHAT I OFFER
+      </p>
+
+      <h2>
+        Business products & services
+      </h2>
+
+    </div>
+
+
+    <div class="slider-controls">
+
+      <button
+        type="button"
+        id="prevSlide"
+        aria-label="Previous"
+      >
+        ‹
+      </button>
+
+      <button
+        type="button"
+        id="nextSlide"
+        aria-label="Next"
+      >
+        ›
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="slider" id="productSlider">
+
+    <div class="slides">
+
+      {% for product in products %}
+
+      <article class="product-card">
+
+        <div class="icon">
+          {{ product.icon }}
+        </div>
+
+        <h3>
+          {{ product.title }}
+        </h3>
+
+        <p>
+          {{ product.text }}
+        </p>
+
+        <a
+          class="button small"
+          href="{{ url_for('main.contact') }}"
+        >
+          Learn More
+        </a>
+
+      </article>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="dots"
+    id="slideDots"
+  ></div>
+
+</section>
+
+
+<section class="section grid-3">
+
+  <article class="info-card">
+
+    <span>01</span>
+
+    <h3>Blog</h3>
+
+    <p>
+      Publish technology, learning and project articles.
+    </p>
+
+  </article>
+
+
+  <article class="info-card">
+
+    <span>02</span>
+
+    <h3>Portfolio</h3>
+
+    <p>
+      Present your applications, experiments and achievements.
+    </p>
+
+  </article>
+
+
+  <article class="info-card">
+
+    <span>03</span>
+
+    <h3>Opportunities</h3>
+
+    <p>
+      Share useful jobs, scholarships and digital opportunities.
+    </p>
+
+  </article>
+
+</section>
+
+{% endblock %}

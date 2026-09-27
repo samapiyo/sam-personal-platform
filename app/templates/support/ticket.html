@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Support Ticket #{{ ticket.id }}{% endblock %}
+
+{% block content %}
+<section class="page">
+
+    <div class="page-header">
+
+        <div>
+            <p class="eyebrow">SUPPORT TICKET #{{ ticket.id }}</p>
+
+            <h1>{{ ticket.subject }}</h1>
+
+            <p>
+                Status:
+                <strong>
+                    {{ ticket.status.replace("_", " ").title() }}
+                </strong>
+            </p>
+        </div>
+
+        <a
+            class="button secondary"
+            href="{{ url_for('main.support') }}"
+        >
+            ← My Tickets
+        </a>
+
+    </div>
+
+    <div class="admin-panel">
+
+        <h2>Conversation</h2>
+
+        <!-- Original customer message -->
+        <div class="support-message customer-message">
+
+            <div class="message-header">
+                <strong>{{ ticket.user.username }}</strong>
+
+                <span>
+                    {{ ticket.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </span>
+            </div>
+
+            <p>
+                {{ ticket.message }}
+            </p>
+
+        </div>
+
+
+        <!-- Replies -->
+        {% for reply in replies %}
+
+        <div class="support-message
+            {% if reply.is_admin %}
+                admin-message
+            {% else %}
+                customer-message
+            {% endif %}
+        ">
+
+            <div class="message-header">
+
+                <strong>
+                    {% if reply.is_admin %}
+                        Support Team
+                    {% else %}
+                        {{ reply.user.username }}
+                    {% endif %}
+                </strong>
+
+                <span>
+                    {{ reply.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </span>
+
+            </div>
+
+            <p>{{ reply.message }}</p>
+
+        </div>
+
+        {% endfor %}
+
+
+        <!-- Reply form -->
+        {% if ticket.status not in ["closed", "resolved"] %}
+
+        <div class="support-reply-form">
+
+            <h2>Send a Reply</h2>
+
+            <form
+                method="post"
+                action="{{ url_for('main.support_reply', ticket_id=ticket.id) }}"
+            >
+
+                <textarea
+                    name="message"
+                    rows="6"
+                    placeholder="Write your reply..."
+                    required
+                ></textarea>
+
+                <button class="button" type="submit">
+                    Send Reply
+                </button>
+
+            </form>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <h3>This ticket is {{ ticket.status.replace("_", " ") }}</h3>
+
+            <p>
+                This conversation is no longer accepting replies.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+{% endblock %}

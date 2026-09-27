@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }} · SAM Personal Platform{% endblock %}
+{% block content %}
+<div class="container">
+<section class="page">
+  <div class="empty-state">
+    <p class="eyebrow">ORDER RECEIVED</p>
+    <h1>Order #{{ order.id }}</h1>
+    <p>Your order has been created successfully.</p>
+    <p><strong>Total: KSh {{ '%.2f'|format(order.total) }}</strong></p>
+    <p>Payment: <span class="badge">{{ order.payment_status }}</span> · Status: <span class="badge">{{ order.order_status }}</span></p>
+    {% if order.payment_status != "paid" %}
+      <p><a class="button" href="{{ url_for('business.pay_order', order_id=order.id) }}">Pay with M-Pesa</a></p>
+    {% else %}
+      <p><strong>Payment confirmed.</strong></p>
+      {% if order.mpesa_payment and order.mpesa_payment.mpesa_receipt %}<p>M-Pesa receipt: {{ order.mpesa_payment.mpesa_receipt }}</p>{% endif %}
+    {% endif %}
+    <div class="actions" style="justify-content:center">
+      <a class="button secondary" href="{{ url_for('business.orders') }}">My orders</a>
+      <a class="button secondary" href="{{ url_for('business.index') }}">Continue shopping</a>
+    </div>
+  </div>
+</section>
+</div>
+{% endblock %}

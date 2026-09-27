@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Support{% endblock %}{% block content %}<section class="page"><p class="eyebrow">SUPPORT</p><h1>Support tickets</h1><div class="admin-panel"><div class="table-wrap"><table><thead><tr><th>#</th><th>User</th><th>Subject</th><th>Status</th><th>Created</th><th>Update</th></tr></thead><tbody>{% for ticket in tickets %}<tr><td>{{ ticket.id }}</td><td>{{ ticket.user.username }}</td><td>
+    <a href="{{ url_for('admin.support_ticket', ticket_id=ticket.id) }}">
+        {{ ticket.subject }}
+    </a>
+</td><td>{{ ticket.status }}</td><td>{{ ticket.created_at.strftime('%Y-%m-%d') }}</td><td><form class="inline-form" method="post" action="{{ url_for('admin.support_status', ticket_id=ticket.id) }}"><select name="status"><option value="open">Open</option><option value="in_progress">In progress</option><option value="closed">Closed</option></select><button class="button small" type="submit">Save</button></form></td></tr>{% else %}<tr><td colspan="6">No support tickets yet.</td></tr>{% endfor %}</tbody></table></div></div></section>{% endblock %}

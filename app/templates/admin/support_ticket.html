@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Support Ticket #{{ ticket.id }}{% endblock %}
+
+{% block content %}
+<section class="page">
+
+    <div class="page-header">
+
+        <div>
+            <p class="eyebrow">ADMIN SUPPORT</p>
+
+            <h1>{{ ticket.subject }}</h1>
+
+            <p>
+                Ticket #{{ ticket.id }}
+                · Customer: <strong>{{ ticket.user.username }}</strong>
+            </p>
+        </div>
+
+        <a
+            class="button secondary"
+            href="{{ url_for('admin.support') }}"
+        >
+            ← All Tickets
+        </a>
+
+    </div>
+
+
+    <div class="admin-panel">
+
+        <h2>Conversation</h2>
+
+        <!-- Original customer message -->
+        <div class="support-message customer-message">
+
+            <div class="message-header">
+
+                <strong>
+                    {{ ticket.user.username }}
+                </strong>
+
+                <span>
+                    {{ ticket.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </span>
+
+            </div>
+
+            <p>{{ ticket.message }}</p>
+
+        </div>
+
+
+        <!-- Replies -->
+        {% for reply in replies %}
+
+        <div class="support-message
+            {% if reply.is_admin %}
+                admin-message
+            {% else %}
+                customer-message
+            {% endif %}
+        ">
+
+            <div class="message-header">
+
+                <strong>
+                    {% if reply.is_admin %}
+                        Support Team
+                    {% else %}
+                        {{ reply.user.username }}
+                    {% endif %}
+                </strong>
+
+                <span>
+                    {{ reply.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </span>
+
+            </div>
+
+            <p>{{ reply.message }}</p>
+
+        </div>
+
+        {% else %}
+
+        <p>No replies yet.</p>
+
+        {% endfor %}
+
+
+        <!-- Admin reply -->
+        {% if ticket.status != "closed" %}
+
+        <div class="support-reply-form">
+
+            <h2>Reply to Customer</h2>
+
+            <form
+                method="post"
+                action="{{ url_for('admin.support_reply', ticket_id=ticket.id) }}"
+            >
+
+                <textarea
+                    name="message"
+                    rows="7"
+                    placeholder="Write your response to the customer..."
+                    required
+                ></textarea>
+
+                <button class="button" type="submit">
+                    Send Reply
+                </button>
+
+            </form>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <h3>Ticket Closed</h3>
+
+            <p>
+                This ticket is closed and cannot receive new replies.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Ticket status -->
+    <div class="admin-panel">
+
+        <h2>Ticket Status</h2>
+
+        <p>
+            Current status:
+            <strong>{{ ticket.status.replace("_", " ").title() }}</strong>
+        </p>
+
+        <form
+            method="post"
+            action="{{ url_for('admin.support_status', ticket_id=ticket.id) }}"
+        >
+
+            <select name="status">
+
+                <option
+                    value="open"
+                    {% if ticket.status == "open" %}selected{% endif %}
+                >
+                    Open
+                </option>
+
+                <option
+                    value="in_progress"
+                    {% if ticket.status == "in_progress" %}selected{% endif %}
+                >
+                    In Progress
+                </option>
+
+                <option
+                    value="resolved"
+                    {% if ticket.status == "resolved" %}selected{% endif %}
+                >
+                    Resolved
+                </option>
+
+                <option
+                    value="closed"
+                    {% if ticket.status == "closed" %}selected{% endif %}
+                >
+                    Closed
+                </option>
+
+            </select>
+
+            <button class="button small" type="submit">
+                Update Status
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+{% endblock %}

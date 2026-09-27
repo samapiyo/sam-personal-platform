@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Checkout · SAM Personal Platform{% endblock %}
+{% block content %}
+<section class="page checkout-page"><p class="eyebrow">CHECKOUT</p><h1>Confirm your order</h1><div class="checkout-grid"><div class="admin-panel"><h2>Order items</h2>{% for item in items %}<div class="checkout-item"><span>{{ item.product.name }} × {{ item.quantity }}</span><strong>KSh {{ '%.2f'|format(item.subtotal) }}</strong></div>{% endfor %}<div class="cart-summary"><span>Total</span><strong>KSh {{ '%.2f'|format(total) }}</strong></div></div><div class="admin-panel"><h2>Customer</h2><p><strong>{{ current_user.username }}</strong><br>{{ current_user.email }}</p><p class="muted">Your order will be recorded as pending. M-Pesa payment integration will be added in the next payment stage.</p><form method="post"><button class="button" type="submit">Place order</button></form></div></div></section>
+{% endblock %}

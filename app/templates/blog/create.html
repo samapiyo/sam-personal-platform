@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Write a Blog Post · SAM Personal Platform{% endblock %}
+{% block content %}
+<section class="page form-wide-page">
+  <div class="form-card form-wide">
+    <p class="eyebrow">COMMUNITY BLOG</p><h1>Write a post</h1>
+    <p class="muted">Your post will be marked <strong>pending</strong> until an administrator reviews and approves it.</p>
+    <form method="post" class="admin-form">
+      <label>Title<input name="title" maxlength="200" required value="{{ request.form.get('title', '') }}" placeholder="Enter a clear title"></label>
+      <label>Category<input name="category" maxlength="100" value="{{ request.form.get('category', 'General') }}" placeholder="Technology, Education, AI..."></label>
+      <label>Excerpt <span class="muted">(optional)</span><textarea name="excerpt" rows="3" maxlength="500" placeholder="Short summary of your article">{{ request.form.get('excerpt', '') }}</textarea></label>
+      <label>Content<textarea name="content" rows="16" required placeholder="Write your article here...">{{ request.form.get('content', '') }}</textarea></label>
+      <button class="button" type="submit">Submit for approval</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

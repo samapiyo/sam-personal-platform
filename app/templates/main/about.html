@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}About · SAM Personal Platform{% endblock %}
+
+{% block content %}
+
+<section class="page about-page">
+
+  <p class="eyebrow">ABOUT SAM PERSONAL PLATFORM</p>
+
+  <h1>Building a digital space for ideas, opportunities and growth.</h1>
+
+  <p class="lead">
+    SAM Personal Platform is a growing digital platform created to bring
+    together technology, useful information, digital opportunities,
+    business services, creativity and community.
+  </p>
+
+  <div class="about-grid">
+
+    <div class="about-card">
+
+      <h2>Our Purpose</h2>
+
+      <p>
+        The platform is designed to make useful digital resources easier
+        to discover and access. It provides a space where people can
+        explore opportunities, learn from articles, discover products and
+        services, and communicate with the platform.
+      </p>
+
+    </div>
+
+
+    <div class="about-card">
+
+      <h2>What You Can Find</h2>
+
+      <ul>
+        <li>Digital opportunities and useful resources</li>
+        <li>Technology and educational content</li>
+        <li>Business products and services</li>
+        <li>Blog articles and practical ideas</li>
+        <li>Customer support and communication</li>
+      </ul>
+
+    </div>
+
+
+    <div class="about-card">
+
+      <h2>Built to Grow</h2>
+
+      <p>
+        This platform is being developed as a modular system so that new
+        features can be added over time without rebuilding the entire
+        website. The goal is to create a reliable digital environment
+        that can continue growing alongside new ideas and projects.
+      </p>
+
+    </div>
+
+
+    <div class="about-card">
+
+      <h2>Technology</h2>
+
+      <p>
+        The platform is built with Flask and modern web technologies,
+        with a focus on responsive design, user accounts, content
+        management, business functionality, support and secure
+        integrations.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="about-cta">
+
+    <h2>Have an idea or need help?</h2>
+
+    <p>
+      Explore the platform or get in touch through the Contact or
+      Support sections.
+    </p>
+
+    <div class="button-group">
+
+      <a class="btn" href="{{ url_for('main.contact') }}">
+        Contact Us
+      </a>
+
+      <a class="btn btn-secondary" href="{{ url_for('main.support') }}">
+        Visit Support
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+{% endblock %}

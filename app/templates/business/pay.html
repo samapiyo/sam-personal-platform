@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Pay for Order #{{ order.id }}{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Pay for Order #{{ order.id }}</h1>
+  <p>Total: <strong>KSh {{ "%.2f"|format(order.total) }}</strong></p>
+  <p>Enter the Safaricom M-Pesa number that should receive the payment prompt.</p>
+  <form method="post">
+    <label for="phone">M-Pesa phone number</label>
+    <input id="phone" name="phone" type="tel" placeholder="0712345678" required>
+    <button type="submit">Send M-Pesa Prompt</button>
+  </form>
+</div>
+{% endblock %}

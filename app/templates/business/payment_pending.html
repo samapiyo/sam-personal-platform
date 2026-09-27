@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}M-Pesa Payment Pending{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>M-Pesa Prompt Sent</h1>
+  <p>Check <strong>{{ payment.phone_number }}</strong> and complete the M-Pesa prompt on the phone.</p>
+  <p>Order #{{ order.id }} — KSh {{ "%.2f"|format(order.total) }}</p>
+  <p>Payment status: <strong>{{ order.payment_status }}</strong></p>
+  <p>After completing payment, refresh your <a href="{{ url_for('business.order_confirmation', order_id=order.id) }}">order page</a>.</p>
+</div>
+{% endblock %}

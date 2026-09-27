@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}My Posts · SAMTECH SOLUTIONS{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+  <div class="section-head">
+
+    <div>
+
+      <p class="eyebrow">
+        YOUR CONTENT
+      </p>
+
+      <h1>
+        My Posts
+      </h1>
+
+      <p class="dark-lead">
+        Track articles you have submitted and their review status.
+      </p>
+
+    </div>
+
+
+    <a
+      class="button"
+      href="{{ url_for('blog.create') }}"
+    >
+      Write Another
+    </a>
+
+  </div>
+
+
+  <div class="my-post-list">
+
+    {% for post in posts %}
+
+      <article class="my-post-row">
+
+        <div>
+
+          <h2>
+            {{ post.title }}
+          </h2>
+
+          <p class="muted">
+            {{ post.category }}
+            · Submitted {{ post.created_at.strftime('%Y-%m-%d') }}
+          </p>
+
+        </div>
+
+
+        <div class="my-post-actions">
+
+          <span class="badge {{ post.status }}">
+            {{ post.status }}
+          </span>
+
+
+          {% if post.status == 'approved' %}
+
+            <a
+              class="button small"
+              href="{{ url_for('blog.detail', slug=post.slug) }}"
+            >
+              View
+            </a>
+
+          {% endif %}
+
+        </div>
+
+      </article>
+
+
+    {% else %}
+
+      <div class="empty-state">
+
+        <h2>
+          You have not submitted a post yet.
+        </h2>
+
+        <a
+          class="button"
+          href="{{ url_for('blog.create') }}"
+        >
+          Create Your First Post
+        </a>
+
+      </div>
+
+    {% endfor %}
+
+  </div>
+
+</section>
+
+{% endblock %}

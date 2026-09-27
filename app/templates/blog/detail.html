@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} · SAM Personal Platform{% endblock %}
+{% block content %}
+<section class="page article-page">
+  <a class="muted back-link" href="{{ url_for('blog.index') }}">← Back to blog</a>
+  <article class="article">
+    <div class="article-meta"><span class="badge">{{ post.category }}</span><span>{{ post.created_at.strftime('%B %d, %Y') }}</span><span>By {{ post.author.username }}</span></div>
+    <h1>{{ post.title }}</h1>
+    {% if post.excerpt %}<p class="article-excerpt">{{ post.excerpt }}</p>{% endif %}
+    <div class="article-content">{{ post.content }}</div>
+  </article>
+</section>
+{% endblock %}

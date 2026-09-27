@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}Contact · SAM Personal Platform{% endblock %}
+
+{% block content %}
+
+<section class="page contact-page">
+
+  <div class="contact-header">
+
+    <p class="eyebrow">CONTACT</p>
+
+    <h1>Let's build something useful.</h1>
+
+    <p class="lead">
+      Have a question, business idea, project, service request or
+      collaboration proposal? Send us a message and we'll get back to you.
+    </p>
+
+  </div>
+
+
+  {% if submitted %}
+
+    <div class="contact-success">
+
+      <h2>Message prepared successfully ✓</h2>
+
+      <p>
+        Thanks, {{ name }}. Your message has been received by the contact
+        form. You can now choose how you'd like to continue the conversation.
+      </p>
+
+      <div class="contact-actions">
+
+        <a
+          class="btn"
+          href="mailto:samotienoapiyo@gmail.com?subject=Contact%20from%20SAM%20Personal%20Platform&body=Name:%20{{ name|urlencode }}%0AEmail:%20{{ email|urlencode }}%0APhone:%20{{ phone|urlencode }}%0A%0AMessage:%20{{ message|urlencode }}"
+        >
+          📧 Send by Email
+        </a>
+
+        <a
+          class="btn btn-whatsapp"
+          href="https://wa.me/YOUR_WHATSAPP_NUMBER?text=Hello%20SAM%20Personal%20Platform.%20My%20name%20is%20{{ name|urlencode }}.%20{{ message|urlencode }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          💬 WhatsApp
+        </a>
+
+      </div>
+
+    </div>
+
+  {% else %}
+
+    <div class="contact-grid">
+
+
+      <!-- CONTACT FORM -->
+
+      <div class="contact-card">
+
+        <h2>Send a Message</h2>
+
+        <p>
+          Fill in the form below and choose how you'd like to contact us.
+        </p>
+
+        <form method="POST" action="{{ url_for('main.contact') }}">
+
+          <div class="form-group">
+
+            <label for="name">
+              Full Name
+            </label>
+
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter your name"
+              value="{{ name|default('') }}"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="email">
+              Email Address
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              value="{{ email|default('') }}"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="phone">
+              Phone Number
+            </label>
+
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="0712 345 678"
+              value="{{ phone|default('') }}"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="message">
+              Message
+            </label>
+
+            <textarea
+              id="message"
+              name="message"
+              rows="7"
+              placeholder="Tell us how we can help..."
+              required
+            >{{ message|default('') }}</textarea>
+
+          </div>
+
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+          >
+            Send Message
+          </button>
+
+        </form>
+
+      </div>
+
+
+      <!-- CONTACT OPTIONS -->
+
+      <div class="contact-card contact-info">
+
+        <h2>Get in Touch</h2>
+
+        <p>
+          Choose the communication method that works best for you.
+        </p>
+
+
+        <div class="contact-method">
+
+          <div class="contact-icon">
+            📧
+          </div>
+
+          <div>
+
+            <h3>Email</h3>
+
+            <p>
+              Send us an email for questions, projects and collaborations.
+            </p>
+
+            <a href="mailto:samotienoapiyo@gmail.com">
+              samotienoapiyo@gmail.com
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="contact-method">
+
+          <div class="contact-icon">
+            💬
+          </div>
+
+          <div>
+
+            <h3>WhatsApp</h3>
+
+            <p>
+              Prefer instant messaging? Contact us directly through WhatsApp.
+            </p>
+
+            <a
+              href="https://wa.me/0711733456"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Chat on WhatsApp
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="contact-method">
+
+          <div class="contact-icon">
+            🛠️
+          </div>
+
+          <div>
+
+            <h3>Support</h3>
+
+            <p>
+              If you already have an account, you can create and manage
+              support tickets directly from the platform.
+            </p>
+
+            <a href="{{ url_for('main.support') }}">
+              Open Support
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="contact-note">
+
+          <strong>What can you contact us about?</strong>
+
+          <ul>
+            <li>Website and software projects</li>
+            <li>Digital services</li>
+            <li>Business enquiries</li>
+            <li>Technology questions</li>
+            <li>Collaboration opportunities</li>
+            <li>General enquiries</li>
+          </ul>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  {% endif %}
+
+</section>
+
+{% endblock %}

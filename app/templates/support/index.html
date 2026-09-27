@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}My Support Tickets · SAMTECH SOLUTIONS{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+  <div class="page-header">
+
+    <div>
+
+      <p class="eyebrow">
+        SUPPORT
+      </p>
+
+      <h1>
+        My Support Tickets
+      </h1>
+
+      <p>
+        Get help, ask questions, and track your support requests.
+      </p>
+
+    </div>
+
+
+    <a
+      class="button"
+      href="{{ url_for('main.new_support_ticket') }}"
+    >
+      Create Ticket
+    </a>
+
+  </div>
+
+
+  <div class="admin-panel">
+
+    {% if tickets %}
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>#</th>
+              <th>Subject</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th></th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            {% for ticket in tickets %}
+
+            <tr>
+
+              <td>
+                #{{ ticket.id }}
+              </td>
+
+
+              <td>
+                <strong>
+                  {{ ticket.subject }}
+                </strong>
+              </td>
+
+
+              <td>
+
+                {% if ticket.status == "open" %}
+
+                  <span class="status-badge">
+                    Open
+                  </span>
+
+                {% elif ticket.status == "in_progress" %}
+
+                  <span class="status-badge">
+                    In Progress
+                  </span>
+
+                {% elif ticket.status == "resolved" %}
+
+                  <span class="status-badge">
+                    Resolved
+                  </span>
+
+                {% else %}
+
+                  <span class="status-badge">
+                    Closed
+                  </span>
+
+                {% endif %}
+
+              </td>
+
+
+              <td>
+                {{ ticket.created_at.strftime('%Y-%m-%d') }}
+              </td>
+
+
+              <td>
+
+                <a
+                  class="button small"
+                  href="{{ url_for('main.support_ticket', ticket_id=ticket.id) }}"
+                >
+                  View
+                </a>
+
+              </td>
+
+            </tr>
+
+            {% endfor %}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+    {% else %}
+
+      <div class="empty-state">
+
+        <h2>
+          No support tickets yet
+        </h2>
+
+        <p>
+          If you need help, create a support ticket and our team
+          will respond.
+        </p>
+
+        <a
+          class="button"
+          href="{{ url_for('main.new_support_ticket') }}"
+        >
+          Create Your First Ticket
+        </a>
+
+      </div>
+
+    {% endif %}
+
+  </div>
+
+</section>
+
+{% endblock %}

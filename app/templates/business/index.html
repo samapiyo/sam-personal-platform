@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Business · SAM Personal Platform{% endblock %}
+{% block content %}
+<section class="page business-page">
+  <div class="section-head">
+    <div><p class="eyebrow">SAM BUSINESS</p><h1>Products & Services</h1><p class="dark-lead">Browse available products, add items to your cart and place an order online.</p></div>
+    <a class="button secondary" href="{{ url_for('business.cart') }}">🛒 Cart{% if session.get('cart') %} ({{ session.get('cart')|length }}){% endif %}</a>
+  </div>
+  {% if categories %}
+  <div class="category-bar"><a class="category-chip {% if not selected_category %}active{% endif %}" href="{{ url_for('business.index') }}">All</a>{% for category in categories %}<a class="category-chip {% if selected_category == category %}active{% endif %}" href="{{ url_for('business.index', category=category) }}">{{ category }}</a>{% endfor %}</div>
+  {% endif %}
+  <div class="product-shop-grid">
+    {% for product in products %}
+    <article class="shop-card">
+      {% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">{% else %}<div class="product-placeholder">{{ product.name[:1]|upper }}</div>{% endif %}
+      <div class="shop-card-body"><div class="blog-card-top"><span class="badge">{{ product.category }}</span><span class="muted">{{ product.stock }} in stock</span></div><h2><a href="{{ url_for('business.product_detail', product_id=product.id) }}">{{ product.name }}</a></h2><p>{{ product.description[:150] }}{% if product.description|length > 150 %}…{% endif %}</p><div class="shop-price">KSh {{ '%.2f'|format(product.price) }}</div><div class="shop-actions"><a class="button secondary small" href="{{ url_for('business.product_detail', product_id=product.id) }}">View</a><form method="post" action="{{ url_for('business.add_to_cart', product_id=product.id) }}"><input type="hidden" name="quantity" value="1"><button class="button small" type="submit" {% if product.stock < 1 %}disabled{% endif %}>Add to cart</button></form></div></div>
+    </article>
+    {% else %}<div class="empty-state"><h2>No products available</h2><p>Products published by the administrator will appear here.</p></div>{% endfor %}
+  </div>
+</section>
+{% endblock %}
