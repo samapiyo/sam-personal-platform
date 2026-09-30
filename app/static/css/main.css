@@ -1434,3 +1434,85 @@ button.button.full-width {
         min-height: 42px;
     }
 }
+/* =========================================
+   MOBILE PRODUCT SLIDER - LOCK MANUAL SWIPE
+========================================= */
+
+@media (max-width: 699px) {
+
+    /* Prevent the page from moving sideways */
+    html,
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Keep the product slider inside the screen */
+    #productSlider {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        touch-action: pan-y;
+    }
+
+    /* Keep automatic horizontal movement */
+    #productSlider .slides {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 20px;
+        touch-action: pan-y;
+    }
+
+    /* One product fills the mobile slider */
+    #productSlider .product-card {
+        flex: 0 0 100%;
+        width: 100%;
+        min-width: 100%;
+    }
+
+    /* Prevent accidental horizontal movement of the section */
+    .section {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+}
+/* =========================================
+   MOBILE PRODUCT SLIDER - LOCK MANUAL SWIPE
+========================================= */
+
+@media (max-width: 699px) {
+
+    /* Prevent the page from moving sideways */
+    html,
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Keep the product slider inside the screen */
+    #productSlider {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        touch-action: pan-y;
+    }
+
+    /* Keep automatic horizontal movement */
+    #productSlider .slides {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 20px;
+        touch-action: pan-y;
+    }
+
+    /* One product fills the mobile slider */
+    #productSlider .product-card {
+        flex: 0 0 100%;
+        width: 100%;
+        min-width: 100%;
+    }
+
+    /* Prevent accidental horizontal movement of the section */
+    .section {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Opportunities · SAMTECH SOLUTIONS{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <div class="section-head">
+
+        <div>
+            <p class="eyebrow">
+                DIGITAL OPPORTUNITIES
+            </p>
+
+            <h1>
+                Opportunities
+            </h1>
+
+            <p class="lead">
+                Discover jobs, scholarships, internships, online work
+                and other useful digital opportunities.
+            </p>
+        </div>
+
+    </div>
+
+
+    {% if opportunities %}
+
+        <div class="grid-3">
+
+            {% for opportunity in opportunities %}
+
+                <article class="info-card">
+
+                    <span>
+                        {{ opportunity.category }}
+                    </span>
+
+                    <h2>
+                        {{ opportunity.title }}
+                    </h2>
+
+                    <p>
+                        {{ opportunity.description }}
+                    </p>
+
+                    {% if opportunity.application_url %}
+
+                        <a
+                            class="button small"
+                            href="{{ opportunity.application_url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Apply Now
+                        </a>
+
+                    {% else %}
+
+                        <p>
+                            Application information will be provided soon.
+                        </p>
+
+                    {% endif %}
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <article class="info-card">
+
+            <h2>
+                No opportunities available yet
+            </h2>
+
+            <p>
+                New opportunities will appear here once they are published.
+            </p>
+
+        </article>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
