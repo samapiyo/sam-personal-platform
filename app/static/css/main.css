@@ -1434,19 +1434,22 @@ button.button.full-width {
         min-height: 42px;
     }
 }
+
 /* =========================================
-   MOBILE PRODUCT SLIDER - LOCK MANUAL SWIPE
+   HOME PAGE MOBILE PRODUCT SLIDER
+   LOCK MANUAL SWIPE ONLY ON THE SLIDER
 ========================================= */
 
 @media (max-width: 699px) {
 
-    /* Prevent the page from moving sideways */
-    html,
-    body {
-        overflow-x: hidden;
-    }
+    /*
+       IMPORTANT:
+       Do NOT set overflow-x:hidden on html or body.
+       Other pages, especially Admin tables, must be
+       allowed to scroll horizontally when necessary.
+    */
 
-    /* Keep the product slider inside the screen */
+    /* Home page product slider only */
     #productSlider {
         width: 100%;
         max-width: 100%;
@@ -1454,7 +1457,7 @@ button.button.full-width {
         touch-action: pan-y;
     }
 
-    /* Keep automatic horizontal movement */
+    /* Keep automatic horizontal sliding */
     #productSlider .slides {
         display: flex;
         flex-wrap: nowrap;
@@ -1462,57 +1465,226 @@ button.button.full-width {
         touch-action: pan-y;
     }
 
-    /* One product fills the mobile slider */
+    /* One product card at a time on mobile */
     #productSlider .product-card {
         flex: 0 0 100%;
         width: 100%;
         min-width: 100%;
-    }
-
-    /* Prevent accidental horizontal movement of the section */
-    .section {
-        max-width: 100%;
-        overflow-x: hidden;
     }
 }
+
 /* =========================================
-   MOBILE PRODUCT SLIDER - LOCK MANUAL SWIPE
+   BUSINESS / PRODUCTS PAGE
+   PRODUCT IMAGES
 ========================================= */
 
-@media (max-width: 699px) {
+.product-shop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    width: 100%;
+}
 
-    /* Prevent the page from moving sideways */
-    html,
-    body {
-        overflow-x: hidden;
+.shop-card {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e3e7ee;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.shop-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.10);
+}
+
+/* Product image container */
+
+.shop-card-image {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    background: #f1f5f9;
+    position: relative;
+}
+
+/* Actual product image */
+
+.shop-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.35s ease;
+}
+
+/* Small zoom effect */
+
+.shop-card:hover .shop-card-image img {
+    transform: scale(1.04);
+}
+
+/* Placeholder */
+
+.shop-card-image .product-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: 900;
+    color: #667085;
+    background:
+        linear-gradient(
+            135deg,
+            #eef2f7,
+            #dfe5ed
+        );
+}
+
+/* Hide the fallback until an image fails */
+
+.shop-card-image .image-error-placeholder {
+    display: none;
+}
+
+/* Product information */
+
+.shop-card-body {
+    padding: 22px;
+}
+
+.shop-card-body h2 {
+    margin: 12px 0 10px;
+}
+
+.shop-card-body h2 a {
+    text-decoration: none;
+}
+
+.shop-card-body p {
+    color: #596579;
+    margin-bottom: 15px;
+}
+
+.shop-price {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin: 15px 0;
+}
+
+.shop-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.shop-actions form {
+    width: auto;
+}
+
+/* Tablet */
+
+@media (max-width: 1000px) {
+
+    .product-shop-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    /* Keep the product slider inside the screen */
-    #productSlider {
-        width: 100%;
-        max-width: 100%;
-        overflow: hidden;
-        touch-action: pan-y;
-    }
+}
 
-    /* Keep automatic horizontal movement */
-    #productSlider .slides {
-        display: flex;
-        flex-wrap: nowrap;
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .product-shop-grid {
+        grid-template-columns: 1fr;
         gap: 20px;
-        touch-action: pan-y;
     }
 
-    /* One product fills the mobile slider */
-    #productSlider .product-card {
-        flex: 0 0 100%;
-        width: 100%;
-        min-width: 100%;
+    .shop-card-image {
+        height: 250px;
     }
 
-    /* Prevent accidental horizontal movement of the section */
-    .section {
-        max-width: 100%;
-        overflow-x: hidden;
+}
+
+/* Small phones */
+
+@media (max-width: 480px) {
+
+    .shop-card-image {
+        height: 220px;
     }
+
+    .shop-card-body {
+        padding: 18px;
+    }
+
+}
+
+/* =========================================
+   ADMIN PRODUCT IMAGE PREVIEW
+========================================= */
+
+.admin-product-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 0;
+    border-bottom: 1px solid #e7ebf1;
+}
+
+.admin-product-image {
+    width: 80px;
+    height: 80px;
+    flex: 0 0 80px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #f1f5f9;
+}
+
+.admin-product-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+}
+
+.admin-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 900;
+    background: #eef2f7;
+    color: #667085;
+}
+
+.admin-product-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.admin-product-info strong,
+.admin-product-info small {
+    display: block;
+}
+
+.admin-product-info small {
+    color: #667085;
+    margin-top: 3px;
+}
+
+.image-status {
+    font-size: 0.78rem;
 }

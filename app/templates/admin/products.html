@@ -1,1 +1,200 @@
-{% extends "base.html" %}{% block title %}Products{% endblock %}{% block content %}<section class="page"><p class="eyebrow">BUSINESS</p><h1>Products</h1><div class="admin-two-col"><div class="admin-panel"><h2>Add product</h2><form method="post" class="admin-form"><label>Name<input name="name" required maxlength="160"></label><label>Description<textarea name="description" rows="5"></textarea></label><label>Category<input name="category" value="General"></label><label>Price (KSh)<input name="price" type="number" step="0.01" min="0" required></label><label>Stock<input name="stock" type="number" min="0" value="0" required></label><label>Image URL<input name="image_url" type="url"></label><button class="button" type="submit">Create product</button></form></div><div class="admin-panel"><h2>Product inventory</h2><div class="mini-list">{% for product in products %}<div><div><strong>{{ product.name }}</strong><small>KSh {{ '%.2f'|format(product.price) }} · Stock {{ product.stock }}</small></div><form method="post" action="{{ url_for('admin.toggle_product', product_id=product.id) }}"><button class="button small" type="submit">{{ 'Hide' if product.is_active else 'Publish' }}</button></form></div>{% else %}<p>No products yet.</p>{% endfor %}</div></div></div></section>{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <p class="eyebrow">BUSINESS</p>
+
+    <h1>Products</h1>
+
+    <div class="admin-two-col">
+
+        <!-- ADD PRODUCT -->
+
+        <div class="admin-panel">
+
+            <h2>Add product</h2>
+
+            <form method="post" class="admin-form" enctype="multipart/form-data">
+
+                <label>
+                    Name
+                    <input
+                        name="name"
+                        required
+                        maxlength="160"
+                    >
+                </label>
+
+                <label>
+                    Description
+                    <textarea
+                        name="description"
+                        rows="5"
+                    ></textarea>
+                </label>
+
+                <label>
+                    Category
+                    <input
+                        name="category"
+                        value="General"
+                    >
+                </label>
+
+                <label>
+                    Price (KSh)
+                    <input
+                        name="price"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        required
+                    >
+                </label>
+
+                <label>
+                    Stock
+                    <input
+                        name="stock"
+                        type="number"
+                        min="0"
+                        value="0"
+                        required
+                    >
+                </label>
+
+                <!-- PRODUCT IMAGE URL -->
+
+                <label>
+    Product Image
+
+    <input
+        name="image"
+        type="file"
+        accept="image/*"
+    >
+
+    <small>
+        Select a product image from your computer.
+    </small>
+</label>
+
+                <button
+                    class="button"
+                    type="submit"
+                >
+                    Create product
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- PRODUCT INVENTORY -->
+
+        <div class="admin-panel">
+
+            <h2>Product inventory</h2>
+
+            <div class="mini-list">
+
+                {% for product in products %}
+
+                <div class="admin-product-item">
+
+                    <!-- IMAGE PREVIEW -->
+
+                    <div class="admin-product-image">
+
+                        {% if product.image_url %}
+
+                        <img
+                            src="{{ product.image_url }}"
+                            alt="{{ product.name }}"
+                            loading="lazy"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        >
+
+                        <div class="admin-image-placeholder">
+                            {{ product.name[:1]|upper }}
+                        </div>
+
+                        {% else %}
+
+                        <div class="admin-image-placeholder">
+                            {{ product.name[:1]|upper }}
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- PRODUCT DETAILS -->
+
+                    <div class="admin-product-info">
+
+                        <strong>
+                            {{ product.name }}
+                        </strong>
+
+                        <small>
+                            KSh {{ '%.2f'|format(product.price) }}
+                            · Stock {{ product.stock }}
+                        </small>
+
+                        {% if product.image_url %}
+
+                        <small class="image-status">
+                            🖼️ Image URL saved
+                        </small>
+
+                        {% else %}
+
+                        <small class="image-status">
+                            No image
+                        </small>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- PUBLISH / HIDE -->
+
+                    <form
+                        method="post"
+                        action="{{ url_for('admin.toggle_product', product_id=product.id) }}"
+                    >
+
+                        <button
+                            class="button small"
+                            type="submit"
+                        >
+                            {{ 'Hide' if product.is_active else 'Publish' }}
+                        </button>
+
+                    </form>
+
+                </div>
+
+                {% else %}
+
+                <p>No products yet.</p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
