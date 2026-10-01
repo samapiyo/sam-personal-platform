@@ -162,51 +162,184 @@ def checkout():
 @business_bp.route("/pay/<int:order_id>", methods=["GET", "POST"])
 @login_required
 def pay_order(order_id):
-    order = Order.query.filter_by(id=order_id, user_id=current_user.id).first_or_404()
+    order = Order.query.filter_by(
+        id=order_id,
+        user_id=current_user.id
+    ).first_or_404()
+
     if order.payment_status == "paid":
         flash("This order has already been paid.", "success")
-        return redirect(url_for("business.order_confirmation", order_id=order.id))
+        return redirect(
+            url_for(
+                "business.order_confirmation",
+                order_id=order.id
+            )
+        )
 
-    payment = MpesaPayment.query.filter_by(order_id=order.id).first()
+    payment = MpesaPayment.query.filter_by(
+        order_id=order.id
+    ).first()
+
     if request.method == "POST":
         phone = request.form.get("phone", "").strip()
+
         try:
             normalized = normalize_phone(phone)
         except ValueError as exc:
             flash(str(exc), "error")
-            return render_template("business/pay.html", order=order, payment=payment)
+            return render_template(
+                "business/pay.html",
+                order=order,
+                payment=payment
+            )
 
-        callback_url = current_app.config.get("MPESA_CALLBACK_URL", "").strip()
+        callback_url = current_app.config.get(
+            "MPESA_CALLBACK_URL",
+            ""
+        ).strip()
+
         if not callback_url:
-            flash("M-Pesa is not configured yet. Set MPESA_CALLBACK_URL in your .env file.", "error")
-            return render_template("business/pay.html", order=order, payment=payment)
+            flash(
+                "M-Pesa is not configured yet. "
+                "Set MPESA_CALLBACK_URL in your environment.",
+                "error"
+            )
+            return render_template(
+                "business/pay.html",
+                order=order,
+                payment=payment
+            )
 
         try:
-            data, normalized = initiate_stk_push(order.id, order.total, normalized, callback_url)
-            if not data.get("ResponseCode") == "0":
-                raise RuntimeError(data.get("ResponseDescription") or "Daraja rejected the STK Push request.")
+            data, normalized = initiate_stk_push(
+                order.id,
+                order.total,
+                normalized,
+                callback_url
+            )
+
+            if data.get("ResponseCode") != "0":
+                raise RuntimeError(
+                    data.get("ResponseDescription")
+                    or "Daraja rejected the STK Push request."
+                )
 
             if payment is None:
-                payment = MpesaPayment(order_id=order.id, phone_number=normalized, amount=order.total)
+                payment = MpesaPayment(
+                    order_id=order.id,
+                    phone_number=normalized,
+                    amount=order.total
+                )
                 db.session.add(payment)
+
             payment.phone_number = normalized
             payment.amount = order.total
             payment.status = "pending"
-            payment.merchant_request_id = data.get("MerchantRequestID")
-            payment.checkout_request_id = data.get("CheckoutRequestID")
+            payment.merchant_request_id = data.get(
+                "MerchantRequestID"
+            )
+            payment.checkout_request_id = data.get(
+                "CheckoutRequestID"
+            )
             payment.result_code = None
-            payment.result_description = data.get("CustomerMessage") or data.get("ResponseDescription")
+            payment.result_description = (
+                data.get("CustomerMessage")
+                or data.get("ResponseDescription")
+            )
+
             order.payment_status = "pending"
+
             db.session.commit()
-            return render_template("business/payment_pending.html", order=order, payment=payment)
+
+            # PRG pattern:
+            # Redirect to a GET page instead of rendering the
+            # pending page directly from this POST request.
+            return redirect(
+                url_for(
+                    "business.payment_pending",
+                    order_id=order.id
+                )
+            )
+
         except Exception as exc:
             db.session.rollback()
-            current_app.logger.exception("M-Pesa STK Push failed")
-            flash(f"Could not start M-Pesa payment: {exc}", "error")
-            return render_template("business/pay.html", order=order, payment=payment)
 
-    return render_template("business/pay.html", order=order, payment=payment)
+            current_app.logger.exception(
+                "M-Pesa STK Push failed"
+            )
 
+            flash(
+                f"Could not start M-Pesa payment: {exc}",
+                "error"
+            )
+
+            return render_template(
+                "business/pay.html",
+                order=order,
+                payment=payment
+            )
+
+    return render_template(
+        "business/pay.html",
+        order=order,
+        payment=payment
+    )
+
+
+@business_bp.route("/payment-pending/<int:order_id>")
+@login_required
+def payment_pending(order_id):
+    order = Order.query.filter_by(
+        id=order_id,
+        user_id=current_user.id
+    ).first_or_404()
+
+    payment = MpesaPayment.query.filter_by(
+        order_id=order.id
+    ).first()
+
+    if order.payment_status == "paid":
+        return redirect(
+            url_for(
+                "business.order_confirmation",
+                order_id=order.id
+            )
+        )
+
+    return render_template(
+        "business/payment_pending.html",
+        order=order,
+        payment=payment
+    )
+
+
+@business_bp.route("/payment-status/<int:order_id>")
+@login_required
+def payment_status(order_id):
+    order = Order.query.filter_by(
+        id=order_id,
+        user_id=current_user.id
+    ).first_or_404()
+
+    payment = MpesaPayment.query.filter_by(
+        order_id=order.id
+    ).first()
+
+    return jsonify({
+        "order_id": order.id,
+        "payment_status": order.payment_status,
+        "payment_status_detail": (
+            payment.status if payment else None
+        ),
+        "result_code": (
+            payment.result_code if payment else None
+        ),
+        "result_description": (
+            payment.result_description if payment else None
+        ),
+        "paid": order.payment_status == "paid",
+        "failed": order.payment_status == "failed",
+    })
 
 @business_bp.post("/payment/callback")
 def mpesa_callback():

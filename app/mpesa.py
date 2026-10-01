@@ -5,6 +5,7 @@ from decimal import Decimal
 import requests
 from flask import current_app
 
+
 SANDBOX_BASE = "https://sandbox.safaricom.co.ke"
 PRODUCTION_BASE = "https://api.safaricom.co.ke"
 
@@ -65,7 +66,7 @@ def normalize_phone(phone):
     """
     Convert common Kenyan phone-number formats
     into the 12-digit format required by M-Pesa.
-    
+
     Accepted examples:
         0712345678
         0712 345 678
@@ -76,15 +77,12 @@ def normalize_phone(phone):
 
     digits = "".join(ch for ch in str(phone or "") if ch.isdigit())
 
-    # 0712345678 -> 254712345678
     if digits.startswith("0") and len(digits) == 10:
         return "254" + digits[1:]
 
-    # 712345678 -> 254712345678
     if digits.startswith("7") and len(digits) == 9:
         return "254" + digits
 
-    # +254712345678 or 254712345678
     if digits.startswith("254") and len(digits) == 12:
         return digits
 
@@ -96,6 +94,7 @@ def normalize_phone(phone):
 def initiate_stk_push(order_id, amount, phone, callback_url):
     token = get_access_token()
     timestamp = _timestamp()
+
     shortcode = current_app.config.get("MPESA_SHORTCODE", "")
     normalized_phone = normalize_phone(phone)
 
@@ -115,22 +114,23 @@ def initiate_stk_push(order_id, amount, phone, callback_url):
         "AccountReference": f"ORDER{order_id}",
         "TransactionDesc": f"Payment for order {order_id}",
     }
-    
+
     response = requests.post(
         f"{_base_url()}/mpesa/stkpush/v1/processrequest",
         json=payload,
         headers={
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
+            "Accept": "application/json",
         },
         timeout=30,
     )
 
-    
-
+   
     if not response.ok:
         raise RuntimeError(
-            f"M-Pesa API returned HTTP {response.status_code}: {response.text}"
+            f"M-Pesa API returned HTTP {response.status_code}: "
+            f"{response.text}"
         )
 
     return response.json(), normalized_phone

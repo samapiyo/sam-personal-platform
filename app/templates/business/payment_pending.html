@@ -1,11 +1,387 @@
+```html
 {% extends "base.html" %}
-{% block title %}M-Pesa Payment Pending{% endblock %}
+
+{% block title %}Payment Processing{% endblock %}
+
 {% block content %}
-<div class="container">
-  <h1>M-Pesa Prompt Sent</h1>
-  <p>Check <strong>{{ payment.phone_number }}</strong> and complete the M-Pesa prompt on the phone.</p>
-  <p>Order #{{ order.id }} — KSh {{ "%.2f"|format(order.total) }}</p>
-  <p>Payment status: <strong>{{ order.payment_status }}</strong></p>
-  <p>After completing payment, refresh your <a href="{{ url_for('business.order_confirmation', order_id=order.id) }}">order page</a>.</p>
-</div>
+<section class="page">
+    <div class="container payment-pending-page">
+
+        <div class="payment-status-card">
+
+            <div class="payment-spinner" id="paymentSpinner" aria-hidden="true"></div>
+
+            <p class="eyebrow">M-PESA PAYMENT</p>
+
+            <h1 id="paymentTitle">
+                Payment Processing
+            </h1>
+
+            <p class="payment-message" id="paymentMessage">
+                Your M-Pesa payment request has been sent.
+            </p>
+
+            <div class="payment-details">
+
+                <p>
+                    <span>Order</span>
+                    <strong>#{{ order.id }}</strong>
+                </p>
+
+                <p>
+                    <span>Amount</span>
+                    <strong>
+                        KSh {{ "%.2f"|format(order.total) }}
+                    </strong>
+                </p>
+
+                {% if payment and payment.phone_number %}
+                <p>
+                    <span>Phone</span>
+                    <strong>
+                        {{ payment.phone_number }}
+                    </strong>
+                </p>
+                {% endif %}
+
+            </div>
+
+            <div class="payment-waiting" id="paymentWaiting">
+
+                <strong>
+                    Complete the payment on your phone.
+                </strong>
+
+                <p>
+                    You have
+                    <strong id="countdown">15</strong>
+                    seconds remaining.
+                </p>
+
+            </div>
+
+            <p
+                class="payment-refresh-status"
+                id="paymentRefreshStatus"
+                aria-live="polite"
+            >
+                Waiting for M-Pesa confirmation...
+            </p>
+
+            <div
+                id="paymentExpired"
+                style="display: none;"
+            >
+                <div class="payment-expired-box">
+                    <strong>Payment Expired</strong>
+
+                    <p>
+                        The 15-second payment window has expired
+                        because the payment was not confirmed.
+                    </p>
+                </div>
+
+                <a
+                    href="{{ url_for('business.pay_order', order_id=order.id) }}"
+                    class="payment-retry-button"
+                >
+                    Start Again
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<style>
+.payment-pending-page {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 50px 20px;
+}
+
+.payment-status-card {
+    text-align: center;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 35px 25px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.payment-spinner {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 22px;
+    border: 4px solid rgba(0, 0, 0, 0.10);
+    border-top-color: #16a34a;
+    border-radius: 50%;
+    animation: payment-spin 1s linear infinite;
+}
+
+@keyframes payment-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.payment-status-card h1 {
+    margin: 8px 0 12px;
+}
+
+.payment-message {
+    margin-bottom: 25px;
+}
+
+.payment-details {
+    margin: 25px 0;
+    padding: 18px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.035);
+    text-align: left;
+}
+
+.payment-details p {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 8px 0;
+}
+
+.payment-details span {
+    opacity: 0.65;
+}
+
+.payment-waiting {
+    padding: 18px;
+    border-radius: 12px;
+    background: rgba(22, 163, 74, 0.08);
+}
+
+.payment-waiting p {
+    margin: 8px 0 0;
+}
+
+.payment-refresh-status {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    opacity: 0.65;
+}
+
+.payment-expired-box {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 12px;
+    background: rgba(220, 38, 38, 0.08);
+}
+
+.payment-expired-box strong {
+    font-size: 1.1rem;
+}
+
+.payment-expired-box p {
+    margin: 8px 0 0;
+}
+
+.payment-retry-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    margin-top: 18px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    background: #16a34a;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.payment-retry-button:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+    .payment-pending-page {
+        padding: 30px 15px;
+    }
+
+    .payment-status-card {
+        padding: 28px 18px;
+    }
+
+    .payment-details p {
+        align-items: flex-start;
+    }
+}
+</style>
+
+<script>
+(function () {
+    const statusElement =
+        document.getElementById("paymentRefreshStatus");
+
+    const titleElement =
+        document.getElementById("paymentTitle");
+
+    const messageElement =
+        document.getElementById("paymentMessage");
+
+    const waitingElement =
+        document.getElementById("paymentWaiting");
+
+    const expiredElement =
+        document.getElementById("paymentExpired");
+
+    const spinnerElement =
+        document.getElementById("paymentSpinner");
+
+    const countdownElement =
+        document.getElementById("countdown");
+
+    if (!statusElement) {
+        return;
+    }
+
+    const statusUrl =
+        "{{ url_for('business.payment_status', order_id=order.id) }}";
+
+    const confirmationUrl =
+        "{{ url_for('business.order_confirmation', order_id=order.id) }}";
+
+    let secondsRemaining = 15;
+    let checking = false;
+    let finished = false;
+
+    async function checkPaymentStatus() {
+        if (checking || finished) {
+            return;
+        }
+
+        checking = true;
+
+        try {
+            const response = await fetch(statusUrl, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                },
+                cache: "no-store"
+            });
+
+            if (!response.ok) {
+                throw new Error("Status request failed.");
+            }
+
+            const data = await response.json();
+
+            if (data.paid) {
+                finished = true;
+
+                statusElement.textContent =
+                    "Payment confirmed. Redirecting...";
+
+                titleElement.textContent =
+                    "Payment Successful";
+
+                messageElement.textContent =
+                    "Your payment has been confirmed.";
+
+                if (waitingElement) {
+                    waitingElement.style.display = "none";
+                }
+
+                window.setTimeout(function () {
+                    window.location.href = confirmationUrl;
+                }, 700);
+
+                return;
+            }
+
+            if (data.failed) {
+                finished = true;
+
+                titleElement.textContent =
+                    "Payment Failed";
+
+                messageElement.textContent =
+                    data.result_description ||
+                    "The M-Pesa payment was not completed.";
+
+                statusElement.textContent =
+                    "Payment failed. Please start again.";
+
+                if (waitingElement) {
+                    waitingElement.style.display = "none";
+                }
+
+                if (spinnerElement) {
+                    spinnerElement.style.display = "none";
+                }
+
+                if (expiredElement) {
+                    expiredElement.style.display = "block";
+                }
+
+                return;
+            }
+
+            statusElement.textContent =
+                "Waiting for M-Pesa confirmation...";
+
+        } catch (error) {
+            statusElement.textContent =
+                "Checking payment status...";
+        } finally {
+            checking = false;
+        }
+    }
+
+    checkPaymentStatus();
+
+    const statusInterval = window.setInterval(function () {
+        if (finished) {
+            window.clearInterval(statusInterval);
+            return;
+        }
+
+        secondsRemaining--;
+
+        if (secondsRemaining > 0) {
+            countdownElement.textContent =
+                secondsRemaining;
+        }
+
+        if (secondsRemaining <= 0) {
+            finished = true;
+
+            window.clearInterval(statusInterval);
+
+            titleElement.textContent =
+                "Payment Expired";
+
+            messageElement.textContent =
+                "The payment was not confirmed within 15 seconds.";
+
+            statusElement.textContent =
+                "Payment session expired.";
+
+            if (waitingElement) {
+                waitingElement.style.display = "none";
+            }
+
+            if (spinnerElement) {
+                spinnerElement.style.display = "none";
+            }
+
+            if (expiredElement) {
+                expiredElement.style.display = "block";
+            }
+        }
+    }, 1000);
+})();
+</script>
+
 {% endblock %}
+```
