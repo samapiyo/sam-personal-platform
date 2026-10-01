@@ -668,16 +668,15 @@ def payment_status(order_id):
     )
 
 
+
 @business_bp.post("/payment/callback")
 def mpesa_callback():
-    payload = request.get_json(
-        silent=True
-    ) or {}
+    payload = request.get_json(silent=True) or {}
 
     current_app.logger.warning(
-    "M-PESA CALLBACK RECEIVED: %s",
-    payload,
-)
+        "M-PESA CALLBACK RECEIVED: %s",
+        payload,
+    )
 
     callback = (
         payload
@@ -685,13 +684,11 @@ def mpesa_callback():
         .get("stkCallback", {})
     )
 
-    checkout_request_id = (
-        callback.get("CheckoutRequestID")
+    checkout_request_id = callback.get(
+        "CheckoutRequestID"
     )
 
-    result_code = callback.get(
-        "ResultCode"
-    )
+    result_code = callback.get("ResultCode")
 
     result_description = callback.get(
         "ResultDesc",
@@ -699,6 +696,10 @@ def mpesa_callback():
     )
 
     if not checkout_request_id:
+        current_app.logger.warning(
+            "M-PESA CALLBACK HAS NO CHECKOUT REQUEST ID"
+        )
+
         return jsonify(
             {
                 "ResultCode": 0,
@@ -716,7 +717,7 @@ def mpesa_callback():
 
     if not payment:
         current_app.logger.warning(
-            "Unknown M-Pesa CheckoutRequestID: %s",
+            "UNKNOWN M-PESA CHECKOUT REQUEST ID: %s",
             checkout_request_id,
         )
 
@@ -733,10 +734,18 @@ def mpesa_callback():
         else None
     )
 
-    payment.result_description = result_description
+    payment.result_description = (
+        result_description
+    )
 
-    # ResultCode 0 = successful payment.
-    if str(result_code) == "0":
+    result_code_string = (
+        str(result_code)
+        if result_code is not None
+        else ""
+    )
+
+    # SUCCESS
+    if result_code_string == "0":
 
         metadata = (
             callback
@@ -772,19 +781,36 @@ def mpesa_callback():
         payment.order.payment_status = "paid"
         payment.order.order_status = "processing"
 
-    # ResultCode 1032 = customer cancelled the STK prompt.
-    elif str(result_code) == "1032":
+        current_app.logger.info(
+            "M-PESA PAYMENT SUCCESSFUL: ORDER=%s",
+            payment.order_id,
+        )
+
+    # CUSTOMER CANCELLED
+    elif result_code_string == "1032":
 
         payment.status = "cancelled"
 
         payment.order.payment_status = "failed"
 
-    # Any other non-zero result is treated as a payment failure.
+        current_app.logger.info(
+            "M-PESA PAYMENT CANCELLED BY CUSTOMER: ORDER=%s",
+            payment.order_id,
+        )
+
+    # OTHER FAILED TRANSACTIONS
     else:
 
         payment.status = "failed"
 
         payment.order.payment_status = "failed"
+
+        current_app.logger.warning(
+            "M-PESA PAYMENT FAILED: ORDER=%s CODE=%s DESCRIPTION=%s",
+            payment.order_id,
+            result_code_string,
+            result_description,
+        )
 
     db.session.commit()
 
@@ -794,6 +820,7 @@ def mpesa_callback():
             "ResultDesc": "Accepted",
         }
     )
+
 
 
 @business_bp.route("/orders")
