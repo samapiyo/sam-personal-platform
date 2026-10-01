@@ -316,12 +316,3 @@ def support_reply(ticket_id):
         )
     )
 
-@main_bp.route("/db-check")
-def db_check():
-    from ..models import Order, MpesaPayment, Product
-
-    return {
-        "products": Product.query.count(),
-        "orders": Order.query.count(),
-        "payments": MpesaPayment.query.count()
-    }

@@ -115,19 +115,7 @@ def initiate_stk_push(order_id, amount, phone, callback_url):
         "AccountReference": f"ORDER{order_id}",
         "TransactionDesc": f"Payment for order {order_id}",
     }
-    print("========== MPESA DEBUG ==========")
-    print("BusinessShortCode:", payload["BusinessShortCode"])
-    print("TransactionType:", payload["TransactionType"])
-    print("Amount:", payload["Amount"])
-    print("PartyA:", payload["PartyA"])
-    print("PartyB:", payload["PartyB"])
-    print("PhoneNumber:", payload["PhoneNumber"])
-    print("CallBackURL:", payload["CallBackURL"])
-    print("AccountReference:", payload["AccountReference"])
-    print("TransactionDesc:", payload["TransactionDesc"])
-    print("Password length:", len(payload["Password"]))
-    print("=================================")
-
+    
     response = requests.post(
         f"{_base_url()}/mpesa/stkpush/v1/processrequest",
         json=payload,
@@ -138,10 +126,7 @@ def initiate_stk_push(order_id, amount, phone, callback_url):
         timeout=30,
     )
 
-    print("========================================")
-    print("MPESA HTTP STATUS:", response.status_code)
-    print("MPESA RESPONSE:", response.text)
-    print("========================================")
+    
 
     if not response.ok:
         raise RuntimeError(
