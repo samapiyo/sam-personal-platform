@@ -1,97 +1,138 @@
-```html
 {% extends "base.html" %}
 
 {% block title %}Payment Processing{% endblock %}
 
 {% block content %}
+
 <section class="page">
     <div class="container payment-pending-page">
 
-        <div class="payment-status-card">
 
-            <div class="payment-spinner" id="paymentSpinner" aria-hidden="true"></div>
+    <div class="payment-status-card">
 
-            <p class="eyebrow">M-PESA PAYMENT</p>
+        <div
+            class="payment-spinner"
+            id="paymentSpinner"
+            aria-hidden="true"
+        ></div>
 
-            <h1 id="paymentTitle">
-                Payment Processing
-            </h1>
+        <p class="eyebrow">M-PESA PAYMENT</p>
 
-            <p class="payment-message" id="paymentMessage">
-                Your M-Pesa payment request has been sent.
+        <h1 id="paymentTitle">
+            Payment Processing
+        </h1>
+
+        <p class="payment-message" id="paymentMessage">
+            Your M-Pesa payment request has been sent.
+        </p>
+
+        <div class="payment-details">
+
+            <p>
+                <span>Order</span>
+                <strong>#{{ order.id }}</strong>
             </p>
 
-            <div class="payment-details">
-
-                <p>
-                    <span>Order</span>
-                    <strong>#{{ order.id }}</strong>
-                </p>
-
-                <p>
-                    <span>Amount</span>
-                    <strong>
-                        KSh {{ "%.2f"|format(order.total) }}
-                    </strong>
-                </p>
-
-                {% if payment and payment.phone_number %}
-                <p>
-                    <span>Phone</span>
-                    <strong>
-                        {{ payment.phone_number }}
-                    </strong>
-                </p>
-                {% endif %}
-
-            </div>
-
-            <div class="payment-waiting" id="paymentWaiting">
-
+            <p>
+                <span>Amount</span>
                 <strong>
-                    Complete the payment on your phone.
+                    KSh {{ "%.2f"|format(order.total) }}
                 </strong>
-
-                <p>
-                    You have
-                    <strong id="countdown">15</strong>
-                    seconds remaining.
-                </p>
-
-            </div>
-
-            <p
-                class="payment-refresh-status"
-                id="paymentRefreshStatus"
-                aria-live="polite"
-            >
-                Waiting for M-Pesa confirmation...
             </p>
 
-            <div
-                id="paymentExpired"
-                style="display: none;"
-            >
-                <div class="payment-expired-box">
-                    <strong>Payment Expired</strong>
-
-                    <p>
-                        The 15-second payment window has expired
-                        because the payment was not confirmed.
-                    </p>
-                </div>
-
-                <a
-                    href="{{ url_for('business.pay_order', order_id=order.id) }}"
-                    class="payment-retry-button"
-                >
-                    Start Again
-                </a>
-            </div>
+            {% if payment and payment.phone_number %}
+            <p>
+                <span>Phone</span>
+                <strong>
+                    {{ payment.phone_number }}
+                </strong>
+            </p>
+            {% endif %}
 
         </div>
 
+        <div
+            class="payment-waiting"
+            id="paymentWaiting"
+        >
+            <strong>
+                Complete the payment on your phone.
+            </strong>
+
+            <p>
+                We are waiting for M-Pesa confirmation.
+            </p>
+
+            <p>
+                Reminder in
+                <strong id="countdown">120</strong>
+                seconds.
+            </p>
+        </div>
+
+        <p
+            class="payment-refresh-status"
+            id="paymentRefreshStatus"
+            aria-live="polite"
+        >
+            Checking M-Pesa payment status...
+        </p>
+
+        <!-- 2-minute reminder -->
+        <div
+            id="paymentReminder"
+            style="display: none;"
+        >
+            <div class="payment-reminder-box">
+                <strong>
+                    Still waiting for payment
+                </strong>
+
+                <p>
+                    We have not received confirmation yet.
+                    If you have not completed the M-Pesa prompt,
+                    you can start the payment again.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('business.pay_order', order_id=order.id) }}"
+                class="payment-retry-button"
+            >
+                Start Again
+            </a>
+        </div>
+
+        <!-- Customer cancelled -->
+        <div
+            id="paymentCancelled"
+            style="display: none;"
+        >
+            <div class="payment-cancelled-box">
+                <strong>
+                    Payment Cancelled
+                </strong>
+
+                <p>
+                    The M-Pesa payment was cancelled.
+                    You can start the payment again if you still
+                    want to complete this order.
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('business.pay_order', order_id=order.id) }}"
+                class="payment-retry-button"
+            >
+                Start Again
+            </a>
+        </div>
+
     </div>
+
+</div>
+
+
 </section>
 
 <style>
@@ -169,18 +210,33 @@
     opacity: 0.65;
 }
 
-.payment-expired-box {
+.payment-reminder-box {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 12px;
+    background: rgba(245, 158, 11, 0.10);
+}
+
+.payment-reminder-box strong {
+    font-size: 1.1rem;
+}
+
+.payment-reminder-box p {
+    margin: 8px 0 0;
+}
+
+.payment-cancelled-box {
     margin-top: 20px;
     padding: 18px;
     border-radius: 12px;
     background: rgba(220, 38, 38, 0.08);
 }
 
-.payment-expired-box strong {
+.payment-cancelled-box strong {
     font-size: 1.1rem;
 }
 
-.payment-expired-box p {
+.payment-cancelled-box p {
     margin: 8px 0 0;
 }
 
@@ -231,8 +287,11 @@
     const waitingElement =
         document.getElementById("paymentWaiting");
 
-    const expiredElement =
-        document.getElementById("paymentExpired");
+    const reminderElement =
+        document.getElementById("paymentReminder");
+
+    const cancelledElement =
+        document.getElementById("paymentCancelled");
 
     const spinnerElement =
         document.getElementById("paymentSpinner");
@@ -250,7 +309,15 @@
     const confirmationUrl =
         "{{ url_for('business.order_confirmation', order_id=order.id) }}";
 
-    let secondsRemaining = 15;
+    /*
+     * Two-minute reminder.
+     *
+     * This is NOT a payment expiry timer.
+     * M-Pesa status checking continues after 120 seconds.
+     */
+    let secondsRemaining = 120;
+
+    let reminderShown = false;
     let checking = false;
     let finished = false;
 
@@ -271,11 +338,16 @@
             });
 
             if (!response.ok) {
-                throw new Error("Status request failed.");
+                throw new Error(
+                    "Status request failed."
+                );
             }
 
             const data = await response.json();
 
+            /*
+             * PAYMENT SUCCESS
+             */
             if (data.paid) {
                 finished = true;
 
@@ -292,13 +364,63 @@
                     waitingElement.style.display = "none";
                 }
 
+                if (reminderElement) {
+                    reminderElement.style.display = "none";
+                }
+
+                if (cancelledElement) {
+                    cancelledElement.style.display = "none";
+                }
+
+                if (spinnerElement) {
+                    spinnerElement.style.display = "none";
+                }
+
                 window.setTimeout(function () {
-                    window.location.href = confirmationUrl;
+                    window.location.href =
+                        confirmationUrl;
                 }, 700);
 
                 return;
             }
 
+            /*
+             * PAYMENT CANCELLED
+             */
+            if (data.cancelled) {
+                finished = true;
+
+                titleElement.textContent =
+                    "Payment Cancelled";
+
+                messageElement.textContent =
+                    "The M-Pesa payment was cancelled.";
+
+                statusElement.textContent =
+                    "Payment cancelled. You can start again.";
+
+                if (waitingElement) {
+                    waitingElement.style.display = "none";
+                }
+
+                if (reminderElement) {
+                    reminderElement.style.display = "none";
+                }
+
+                if (spinnerElement) {
+                    spinnerElement.style.display = "none";
+                }
+
+                if (cancelledElement) {
+                    cancelledElement.style.display = "block";
+                }
+
+                return;
+            }
+
+            /*
+             * OTHER PAYMENT FAILURE
+             */
             if (data.failed) {
                 finished = true;
 
@@ -320,8 +442,8 @@
                     spinnerElement.style.display = "none";
                 }
 
-                if (expiredElement) {
-                    expiredElement.style.display = "block";
+                if (reminderElement) {
+                    reminderElement.style.display = "block";
                 }
 
                 return;
@@ -338,50 +460,108 @@
         }
     }
 
+    /*
+     * Check immediately.
+     */
     checkPaymentStatus();
 
-    const statusInterval = window.setInterval(function () {
-        if (finished) {
-            window.clearInterval(statusInterval);
-            return;
-        }
+    /*
+     * Continue checking M-Pesa every 3 seconds.
+     */
+    const statusInterval = window.setInterval(
+        function () {
+            if (finished) {
+                window.clearInterval(
+                    statusInterval
+                );
 
-        secondsRemaining--;
-
-        if (secondsRemaining > 0) {
-            countdownElement.textContent =
-                secondsRemaining;
-        }
-
-        if (secondsRemaining <= 0) {
-            finished = true;
-
-            window.clearInterval(statusInterval);
-
-            titleElement.textContent =
-                "Payment Expired";
-
-            messageElement.textContent =
-                "The payment was not confirmed within 15 seconds.";
-
-            statusElement.textContent =
-                "Payment session expired.";
-
-            if (waitingElement) {
-                waitingElement.style.display = "none";
+                return;
             }
 
-            if (spinnerElement) {
-                spinnerElement.style.display = "none";
+            checkPaymentStatus();
+        },
+        3000
+    );
+
+    /*
+     * Two-minute reminder.
+     *
+     * This DOES NOT stop payment checking.
+     */
+    const countdownInterval = window.setInterval(
+        function () {
+            if (finished) {
+                window.clearInterval(
+                    countdownInterval
+                );
+
+                return;
             }
 
-            if (expiredElement) {
-                expiredElement.style.display = "block";
+            secondsRemaining--;
+
+            if (secondsRemaining > 0) {
+                countdownElement.textContent =
+                    secondsRemaining;
             }
-        }
-    }, 1000);
+
+            if (
+                secondsRemaining <= 0 &&
+                !reminderShown
+            ) {
+                reminderShown = true;
+
+                countdownElement.textContent = "0";
+
+                statusElement.textContent =
+                    "Still waiting for M-Pesa confirmation.";
+
+                if (waitingElement) {
+                    waitingElement.style.display = "none";
+                }
+
+                if (reminderElement) {
+                    reminderElement.style.display = "block";
+                }
+            }
+        },
+        1000
+    );
 })();
 </script>
 
 {% endblock %}
+
+````
+
+### Step 3 — Save
+
+Press:
+
+**Ctrl + S**
+
+### Step 4 — Check it
+
+Run:
+
+```powershell
+python -m py_compile app\routes\business.py
+````
+
+Then:
+
+```powershell
+Select-String -Path app\templates\business\payment_pending.html -Pattern '15|30|Payment Expired|15-second|30-second'
 ```
+
+The second command should produce **no output**.
+
+Then:
+
+```powershell
+Select-String -Path app\templates\business\payment_pending.html -Pattern '120|2-minute|Payment Cancelled'
+```
+
+You should see the new 120-second/2-minute content.
+
+**One important point:** this version treats 2 minutes as a **reminder**, not a true server-side expiry. That's intentional based on what you asked for: a customer who delays can still complete the M-Pesa transaction, and the site will continue detecting the callback.
