@@ -1,37 +1,284 @@
 {% extends "base.html" %}
+
 {% block title %}Admin Dashboard{% endblock %}
+
 {% block content %}
+
 <section class="page admin-page">
-  <div class="admin-heading"><div><p class="eyebrow">CONTROL CENTER</p><h1>Admin Dashboard</h1><p class="lead dark-lead">Manage users, content, business orders, support and opportunities from one place.</p></div></div>
+
+  <!-- HEADER -->
+  <div class="admin-heading">
+    <div>
+      <p class="eyebrow">SAMTECH SOLUTIONS</p>
+
+      <h1>Admin Dashboard</h1>
+
+      <p class="lead dark-lead">
+        Manage your users, blogs, products, orders,
+        support requests and opportunities from one place.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- STATISTICS -->
   <div class="admin-grid stats-grid">
-    <a class="admin-stat" href="{{ url_for('admin.users') }}"><span>Users</span><strong>{{ stats.users }}</strong></a>
-    <a class="admin-stat warning" href="{{ url_for('admin.blog') }}"><span>Pending blogs</span><strong>{{ stats.pending_blogs }}</strong></a>
-    <a class="admin-stat" href="{{ url_for('admin.products') }}"><span>Active products</span><strong>{{ stats.products }}</strong></a>
-    <a class="admin-stat" href="{{ url_for('admin.orders') }}"><span>Orders</span><strong>{{ stats.orders }}</strong></a>
-    <a class="admin-stat warning" href="{{ url_for('admin.support') }}"><span>Open support</span><strong>{{ stats.open_support }}</strong></a>
-    <a class="admin-stat" href="{{ url_for('admin.opportunities') }}"><span>Published opportunities</span><strong>{{ stats.opportunities }}</strong></a>
+
+    <a class="admin-stat"
+       href="{{ url_for('admin.users') }}">
+      <span>Users</span>
+      <strong>{{ stats.users }}</strong>
+    </a>
+
+    <a class="admin-stat warning"
+       href="{{ url_for('admin.blog') }}">
+      <span>Pending blogs</span>
+      <strong>{{ stats.pending_blogs }}</strong>
+    </a>
+
+    <a class="admin-stat"
+       href="{{ url_for('admin.products') }}">
+      <span>Active products</span>
+      <strong>{{ stats.products }}</strong>
+    </a>
+
+    <a class="admin-stat"
+       href="{{ url_for('admin.orders') }}">
+      <span>Orders</span>
+      <strong>{{ stats.orders }}</strong>
+    </a>
+
+    <a class="admin-stat warning"
+       href="{{ url_for('admin.support') }}">
+      <span>Open support</span>
+      <strong>{{ stats.open_support }}</strong>
+    </a>
+
+    <a class="admin-stat"
+       href="{{ url_for('admin.opportunities') }}">
+      <span>Published opportunities</span>
+      <strong>{{ stats.opportunities }}</strong>
+    </a>
+
   </div>
 
-  <div class="admin-toolbar">
-    <a class="button" href="{{ url_for('admin.products') }}">Manage products</a>
-    <a class="button secondary" href="{{ url_for('admin.blog') }}">Review blogs</a>
-    <a class="button secondary" href="{{ url_for('admin.orders') }}">View orders</a>
-    <a class="button secondary" href="{{ url_for('admin.support') }}">Support</a>
+
+  <!-- QUICK ACTIONS -->
+  <div class="admin-panel">
+
+    <div class="panel-head">
+      <div>
+        <p class="eyebrow">QUICK ACTIONS</p>
+        <h2>Manage SAMTECH SOLUTIONS</h2>
+      </div>
+    </div>
+
+    <div class="admin-toolbar">
+
+      <a class="button"
+         href="{{ url_for('admin.products') }}">
+        + Add / Manage Products
+      </a>
+
+      <a class="button"
+         href="{{ url_for('admin.opportunities') }}">
+        + Add / Manage Opportunities
+      </a>
+
+      <a class="button secondary"
+         href="{{ url_for('admin.blog') }}">
+        Review Blogs
+      </a>
+
+      <a class="button secondary"
+         href="{{ url_for('admin.orders') }}">
+        View Orders
+      </a>
+
+      <a class="button secondary"
+         href="{{ url_for('admin.support') }}">
+        Support
+      </a>
+
+      <a class="button secondary"
+         href="{{ url_for('admin.users') }}">
+        Users
+      </a>
+
+    </div>
+
   </div>
 
+
+  <!-- BLOGS + ORDERS -->
   <div class="admin-two-col">
-    <div class="admin-panel"><div class="panel-head"><h2>Pending blog posts</h2><a href="{{ url_for('admin.blog') }}">View all</a></div>
-      <div class="mini-list">{% for post in pending_blogs %}<div><div><strong>{{ post.title }}</strong><small>by {{ post.author.username }}</small></div><span class="badge pending">Pending</span></div>{% else %}<p>No pending posts.</p>{% endfor %}</div>
+
+
+    <!-- PENDING BLOGS -->
+    <div class="admin-panel">
+
+      <div class="panel-head">
+        <h2>Pending blog posts</h2>
+
+        <a href="{{ url_for('admin.blog') }}">
+          View all
+        </a>
+      </div>
+
+      <div class="mini-list">
+
+        {% for post in pending_blogs %}
+
+        <div>
+
+          <div>
+            <strong>{{ post.title }}</strong>
+
+            <small>
+              by {{ post.author.username }}
+            </small>
+          </div>
+
+          <span class="badge pending">
+            Pending
+          </span>
+
+        </div>
+
+        {% else %}
+
+        <p>No pending posts.</p>
+
+        {% endfor %}
+
+      </div>
+
     </div>
-    <div class="admin-panel"><div class="panel-head"><h2>Recent orders</h2><a href="{{ url_for('admin.orders') }}">View all</a></div>
-      <div class="mini-list">{% for order in recent_orders %}<div><div><strong>#{{ order.id }} · {{ order.user.username }}</strong><small>{{ order.total }} · {{ order.payment_status }}</small></div><span class="badge">{{ order.order_status }}</span></div>{% else %}<p>No orders yet.</p>{% endfor %}</div>
+
+
+    <!-- RECENT ORDERS -->
+    <div class="admin-panel">
+
+      <div class="panel-head">
+        <h2>Recent orders</h2>
+
+        <a href="{{ url_for('admin.orders') }}">
+          View all
+        </a>
+      </div>
+
+      <div class="mini-list">
+
+        {% for order in recent_orders %}
+
+        <div>
+
+          <div>
+
+            <strong>
+              #{{ order.id }} · {{ order.user.username }}
+            </strong>
+
+            <small>
+              KSh {{ "%.2f"|format(order.total) }}
+              · {{ order.payment_status }}
+            </small>
+
+          </div>
+
+          <span class="badge">
+            {{ order.order_status }}
+          </span>
+
+        </div>
+
+        {% else %}
+
+        <p>No orders yet.</p>
+
+        {% endfor %}
+
+      </div>
+
     </div>
+
   </div>
 
-  <div class="admin-panel"><div class="panel-head"><h2>Recent activity</h2><a href="{{ url_for('admin.activity') }}">View full log</a></div>
-    <div class="table-wrap"><table><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Path</th></tr></thead><tbody>
-      {% for a in activities %}<tr><td>{{ a.created_at.strftime('%Y-%m-%d %H:%M') }}</td><td>{{ a.user.username if a.user else 'Guest' }}</td><td>{{ a.action }}</td><td>{{ a.path }}</td></tr>{% else %}<tr><td colspan="4">No activity yet.</td></tr>{% endfor %}
-    </tbody></table></div>
+
+  <!-- RECENT ACTIVITY -->
+  <div class="admin-panel">
+
+    <div class="panel-head">
+
+      <div>
+        <p class="eyebrow">ACTIVITY</p>
+        <h2>Recent activity</h2>
+      </div>
+
+      <a href="{{ url_for('admin.activity') }}">
+        View full log
+      </a>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Time</th>
+            <th>User</th>
+            <th>Action</th>
+            <th>Path</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          {% for a in activities %}
+
+          <tr>
+
+            <td>
+              {{ a.created_at.strftime('%Y-%m-%d %H:%M') }}
+            </td>
+
+            <td>
+              {{ a.user.username if a.user else 'Guest' }}
+            </td>
+
+            <td>
+              {{ a.action }}
+            </td>
+
+            <td>
+              {{ a.path }}
+            </td>
+
+          </tr>
+
+          {% else %}
+
+          <tr>
+            <td colspan="4">
+              No activity yet.
+            </td>
+          </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
   </div>
+
 </section>
+
 {% endblock %}

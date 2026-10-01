@@ -1688,3 +1688,275 @@ button.button.full-width {
 .image-status {
     font-size: 0.78rem;
 }
+
+/* =========================================
+   ADMIN DASHBOARD
+   ========================================= */
+
+.admin-page {
+    padding-bottom: 60px;
+}
+
+.admin-heading {
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.admin-stat {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 125px;
+    padding: 22px;
+    border-radius: 16px;
+    text-decoration: none;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.admin-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    border-color: rgba(0, 0, 0, 0.16);
+}
+
+.admin-stat span {
+    font-size: 0.95rem;
+    font-weight: 600;
+    opacity: 0.72;
+}
+
+.admin-stat strong {
+    display: block;
+    margin-top: 12px;
+    font-size: 2.2rem;
+    line-height: 1;
+    font-weight: 800;
+}
+
+.admin-stat.warning {
+    border-left: 5px solid #f59e0b;
+}
+
+
+/* =========================================
+   ADMIN QUICK ACTION BUTTONS
+   ========================================= */
+
+.admin-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0 28px;
+}
+
+.admin-toolbar .button {
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
+/* =========================================
+   ADMIN PANELS
+   ========================================= */
+
+.admin-panel {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.admin-two-col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.panel-head h2 {
+    margin: 0;
+}
+
+
+/* =========================================
+   ADMIN MINI LISTS
+   ========================================= */
+
+.mini-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.mini-list > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.mini-list > div:last-child {
+    border-bottom: none;
+}
+
+.mini-list strong {
+    display: block;
+}
+
+.mini-list small {
+    display: block;
+    margin-top: 4px;
+    opacity: 0.65;
+}
+
+
+/* =========================================
+   M-PESA PAYMENT BUTTON
+   ========================================= */
+
+
+
+/* =========================================
+   MOBILE ADMIN DASHBOARD
+   ========================================= */
+
+@media (max-width: 900px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admin-two-col {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-stat {
+        min-height: 105px;
+        padding: 18px;
+    }
+
+    .admin-stat strong {
+        font-size: 2rem;
+    }
+
+    .admin-toolbar {
+        flex-direction: column;
+    }
+
+    .admin-toolbar .button {
+        width: 100%;
+    }
+
+    .admin-panel {
+        padding: 17px;
+        border-radius: 13px;
+    }
+
+    .panel-head {
+        align-items: flex-start;
+    }
+
+    .mini-list > div {
+        align-items: flex-start;
+    }
+}
+
+/* =========================================
+   M-PESA PAYMENT BUTTON
+   ========================================= */
+
+.mpesa-button {
+    width: 100%;
+    min-height: 54px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 14px 22px;
+
+    border: none;
+    border-radius: 12px;
+
+    font-size: 1rem;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    background: #16a34a;
+    color: #ffffff;
+
+    box-shadow: 0 6px 16px rgba(22, 163, 74, 0.25);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.mpesa-button:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(22, 163, 74, 0.30);
+}
+
+.mpesa-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(22, 163, 74, 0.20);
+}
+
+.mpesa-button:focus-visible {
+    outline: 3px solid rgba(22, 163, 74, 0.35);
+    outline-offset: 3px;
+}
+
+.mpesa-icon {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 600px) {
+
+    .mpesa-button {
+        min-height: 52px;
+        font-size: 0.98rem;
+        padding: 13px 18px;
+    }
+
+}
