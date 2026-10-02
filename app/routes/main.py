@@ -53,6 +53,10 @@ def home():
         products=products
     )
 
+@main_bp.route("/portfolio")
+def portfolio():
+    return render_template("main/portfolio.html")
+
 
 @main_bp.route("/about")
 def about():

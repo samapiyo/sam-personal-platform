@@ -1960,3 +1960,490 @@ button.button.full-width {
     }
 
 }
+
+/* =========================================
+   SAMTECH SOLUTIONS - HOME PAGE
+========================================= */
+
+.home-intro {
+    padding: 80px 20px 65px;
+}
+
+.home-intro .container {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.home-eyebrow,
+.section-label {
+    margin: 0 0 14px;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    opacity: .55;
+}
+
+.home-intro h1 {
+    max-width: 850px;
+    margin: 0;
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: .95;
+    letter-spacing: -.06em;
+}
+
+.home-description {
+    max-width: 600px;
+    margin: 25px 0 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    opacity: .62;
+}
+
+
+/* =========================================
+   PLATFORM
+========================================= */
+
+.home-platform {
+    padding: 65px 20px 90px;
+}
+
+.home-platform .container {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.platform-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.platform-heading h2 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1;
+    letter-spacing: -.045em;
+}
+
+.platform-heading > p {
+    max-width: 390px;
+    margin: 0;
+    font-size: .95rem;
+    line-height: 1.7;
+    opacity: .58;
+}
+
+
+/* =========================================
+   CARDS
+========================================= */
+
+.platform-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.platform-card {
+    min-height: 370px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+
+    border: 1px solid rgba(0, 0, 0, .09);
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, .45);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+}
+
+.platform-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(0, 0, 0, .18);
+    background: rgba(255, 255, 255, .75);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, .10);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: .72rem;
+    font-weight: 800;
+    opacity: .45;
+}
+
+.card-arrow {
+    font-size: 1.1rem;
+    opacity: .8;
+    transition: transform .25s ease;
+}
+
+.platform-card:hover .card-arrow {
+    transform: translate(3px, -3px);
+}
+
+.card-content {
+    margin-top: auto;
+}
+
+.card-content p {
+    margin: 0 0 8px;
+
+    font-size: .65rem;
+    font-weight: 900;
+    letter-spacing: .14em;
+
+    opacity: .45;
+}
+
+.card-content h3 {
+    margin: 0 0 12px;
+
+    font-size: 2rem;
+    line-height: 1;
+
+    letter-spacing: -.04em;
+}
+
+.card-content span {
+    display: block;
+
+    font-size: .9rem;
+    line-height: 1.65;
+
+    opacity: .62;
+}
+
+.card-link {
+    margin-top: 25px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: .85rem;
+    font-weight: 800;
+}
+
+.card-link b {
+    transition: transform .2s ease;
+}
+
+.platform-card:hover .card-link b {
+    transform: translateX(4px);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 950px) {
+
+    .platform-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .platform-heading {
+        align-items: flex-start;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .home-intro {
+        padding: 55px 15px 45px;
+    }
+
+    .home-intro h1 {
+        font-size: clamp(2.7rem, 14vw, 4.2rem);
+    }
+
+    .home-description {
+        font-size: .98rem;
+    }
+
+    .home-platform {
+        padding: 45px 15px 65px;
+    }
+
+    .platform-heading {
+        display: block;
+    }
+
+    .platform-heading > p {
+        margin-top: 15px;
+    }
+
+    .platform-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .platform-card {
+        min-height: 300px;
+    }
+}
+
+/* =========================================
+   PORTFOLIO PAGE
+========================================= */
+
+.portfolio-hero {
+    padding: 80px 20px 70px;
+}
+
+.portfolio-hero .container,
+.portfolio-section .container,
+.portfolio-bottom .container {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.portfolio-eyebrow {
+    margin: 0 0 18px;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    opacity: .5;
+}
+
+.portfolio-hero h1 {
+    max-width: 850px;
+    margin: 0;
+
+    font-size: clamp(3.2rem, 8vw, 7rem);
+    line-height: .9;
+    letter-spacing: -.065em;
+}
+
+.portfolio-intro {
+    max-width: 620px;
+    margin: 28px 0 0;
+
+    font-size: 1.05rem;
+    line-height: 1.7;
+
+    opacity: .62;
+}
+
+
+/* =========================================
+   PORTFOLIO SECTION
+========================================= */
+
+.portfolio-section {
+    padding: 65px 20px 90px;
+}
+
+.portfolio-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    gap: 40px;
+    margin-bottom: 32px;
+}
+
+.portfolio-heading h2 {
+    margin: 0;
+
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1;
+
+    letter-spacing: -.045em;
+}
+
+.portfolio-heading > p {
+    max-width: 390px;
+    margin: 0;
+
+    font-size: .95rem;
+    line-height: 1.7;
+
+    opacity: .58;
+}
+
+
+/* =========================================
+   PROJECT CARDS
+========================================= */
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.portfolio-card {
+    min-height: 360px;
+
+    padding: 26px;
+
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid rgba(0, 0, 0, .09);
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, .45);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+}
+
+.portfolio-card:hover {
+    transform: translateY(-6px);
+
+    border-color: rgba(0, 0, 0, .18);
+
+    background: rgba(255, 255, 255, .75);
+
+    box-shadow: 0 20px 45px rgba(0, 0, 0, .10);
+}
+
+.portfolio-number {
+    font-size: .72rem;
+    font-weight: 800;
+
+    opacity: .42;
+}
+
+.portfolio-card-content {
+    margin-top: auto;
+}
+
+.portfolio-card-content p {
+    margin: 0 0 9px;
+
+    font-size: .65rem;
+    font-weight: 900;
+
+    letter-spacing: .14em;
+
+    opacity: .45;
+}
+
+.portfolio-card-content h3 {
+    margin: 0 0 13px;
+
+    font-size: clamp(1.7rem, 3vw, 2.2rem);
+
+    line-height: 1;
+
+    letter-spacing: -.04em;
+}
+
+.portfolio-card-content span {
+    display: block;
+
+    max-width: 500px;
+
+    font-size: .92rem;
+    line-height: 1.65;
+
+    opacity: .62;
+}
+
+.portfolio-tech {
+    margin-top: 25px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid rgba(0, 0, 0, .08);
+
+    font-size: .72rem;
+    font-weight: 700;
+
+    opacity: .48;
+}
+
+
+/* =========================================
+   BOTTOM SECTION
+========================================= */
+
+.portfolio-bottom {
+    padding: 50px 20px 100px;
+}
+
+.portfolio-bottom h2 {
+    margin: 0;
+
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: .95;
+
+    letter-spacing: -.055em;
+}
+
+.portfolio-bottom > .container > p:last-child {
+    max-width: 500px;
+    margin-top: 25px;
+
+    font-size: .95rem;
+    line-height: 1.7;
+
+    opacity: .58;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .portfolio-hero {
+        padding: 55px 15px 45px;
+    }
+
+    .portfolio-hero h1 {
+        font-size: clamp(3rem, 15vw, 4.5rem);
+    }
+
+    .portfolio-intro {
+        font-size: .98rem;
+    }
+
+    .portfolio-section {
+        padding: 45px 15px 65px;
+    }
+
+    .portfolio-heading {
+        display: block;
+    }
+
+    .portfolio-heading > p {
+        margin-top: 15px;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .portfolio-card {
+        min-height: 310px;
+        padding: 22px;
+    }
+
+    .portfolio-bottom {
+        padding: 40px 15px 70px;
+    }
+}

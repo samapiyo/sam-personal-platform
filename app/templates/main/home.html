@@ -1,166 +1,148 @@
 {% extends "base.html" %}
 
-{% block title %}Home · SAMTECH SOLUTIONS{% endblock %}
+{% block title %}SAMTECH SOLUTIONS{% endblock %}
 
 {% block content %}
 
-<section class="hero">
+<section class="home-intro">
+    <div class="container">
 
-  <div class="hero-content">
-    <p class="eyebrow">
-      PERSONAL • BUSINESS • BLOG • PORTFOLIO
-    </p>
+        <p class="home-eyebrow">SAMTECH SOLUTIONS</p>
 
-    <h1>
-      One professional platform for everything I create.
-    </h1>
+        <h1>
+            Technology, ideas<br>
+            and opportunities.
+        </h1>
 
-    <p class="lead">
-      Showcase projects, publish ideas, offer digital services
-      and share useful opportunities.
-    </p>
-
-    <div class="actions">
-
-      <a class="button" href="{{ url_for('main.about') }}">
-        Explore
-      </a>
-
-      <a class="button secondary" href="{{ url_for('main.contact') }}">
-        Contact
-      </a>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section class="section">
-
-  <div class="section-head">
-
-    <div>
-
-      <p class="eyebrow">
-        WHAT I OFFER
-      </p>
-
-      <h2>
-        Business products & services
-      </h2>
-
-    </div>
-
-
-    <div class="slider-controls">
-
-      <button
-        type="button"
-        id="prevSlide"
-        aria-label="Previous"
-      >
-        ‹
-      </button>
-
-      <button
-        type="button"
-        id="nextSlide"
-        aria-label="Next"
-      >
-        ›
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <div class="slider" id="productSlider">
-
-    <div class="slides">
-
-      {% for product in products %}
-
-      <article class="product-card">
-
-        <div class="icon">
-          {{ product.icon }}
-        </div>
-
-        <h3>
-          {{ product.title }}
-        </h3>
-
-        <p>
-          {{ product.text }}
+        <p class="home-description">
+            Explore projects, learn through practical content,
+            discover opportunities and find digital solutions.
         </p>
 
-        <a
-          class="button small"
-          href="{{ url_for('main.contact') }}"
-        >
-          Learn More
-        </a>
-
-      </article>
-
-      {% endfor %}
-
     </div>
-
-  </div>
-
-
-  <div
-    class="dots"
-    id="slideDots"
-  ></div>
-
 </section>
 
 
-<section class="section grid-3">
+<section class="home-platform">
+    <div class="container">
 
-  <article class="info-card">
+        <div class="platform-heading">
+            <div>
+                <p class="section-label">EXPLORE</p>
+                <h2>Everything in one place.</h2>
+            </div>
 
-    <span>01</span>
-
-    <h3>Blog</h3>
-
-    <p>
-      Publish technology, learning and project articles.
-    </p>
-
-  </article>
-
-
-  <article class="info-card">
-
-    <span>02</span>
-
-    <h3>Portfolio</h3>
-
-    <p>
-      Present your applications, experiments and achievements.
-    </p>
-
-  </article>
+            <p>
+                A simple space to learn, create, discover
+                and connect with digital possibilities.
+            </p>
+        </div>
 
 
-  <article class="info-card">
+        <div class="platform-grid">
 
-    <span>03</span>
+            <a href="{{ url_for('blog.index') }}" class="platform-card">
 
-    <h3>Opportunities</h3>
+                <div class="card-top">
+                    <span>01</span>
+                    <span class="card-arrow">↗</span>
+                </div>
 
-    <p>
-      Share useful jobs, scholarships and digital opportunities.
-    </p>
+                <div class="card-content">
+                    <p>KNOWLEDGE</p>
 
-  </article>
+                    <h3>Blog</h3>
 
+                    <span>
+                        Technology, learning, AI,
+                        programming and practical ideas.
+                    </span>
+                </div>
+
+                <div class="card-link">
+                    Explore Blog <b>→</b>
+                </div>
+
+            </a>
+
+
+            <a href="{{ url_for('main.portfolio') }}" class="platform-card">
+
+                <div class="card-top">
+                    <span>02</span>
+                    <span class="card-arrow">↗</span>
+                </div>
+
+                <div class="card-content">
+                    <p>CREATION</p>
+
+                    <h3>Portfolio</h3>
+
+                    <span>
+                        Applications, websites, experiments
+                        and projects built with purpose.
+                    </span>
+                </div>
+
+                <div class="card-link">
+                    View Portfolio <b>→</b>
+                </div>
+
+            </a>
+
+
+            <a href="{{ url_for('opportunities.index') }}" class="platform-card">
+
+                <div class="card-top">
+                    <span>03</span>
+                    <span class="card-arrow">↗</span>
+                </div>
+
+                <div class="card-content">
+                    <p>DISCOVER</p>
+
+                    <h3>Opportunities</h3>
+
+                    <span>
+                        Jobs, scholarships, internships,
+                        freelance work and digital opportunities.
+                    </span>
+                </div>
+
+                <div class="card-link">
+                    Find Opportunities <b>→</b>
+                </div>
+
+            </a>
+
+
+            <a href="{{ url_for('business.index') }}" class="platform-card">
+
+                <div class="card-top">
+                    <span>04</span>
+                    <span class="card-arrow">↗</span>
+                </div>
+
+                <div class="card-content">
+                    <p>BUSINESS</p>
+
+                    <h3>Business</h3>
+
+                    <span>
+                        Explore digital products and services
+                        available through SAMTECH SOLUTIONS.
+                    </span>
+                </div>
+
+                <div class="card-link">
+                    Visit Business <b>→</b>
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
 </section>
 
 {% endblock %}
