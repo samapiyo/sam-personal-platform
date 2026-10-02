@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Opportunity{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <div class="page-header">
+
+        <div>
+            <p class="eyebrow">OPPORTUNITIES</p>
+
+            <h1>Edit Opportunity</h1>
+
+            <p>
+                Update the opportunity information below.
+            </p>
+        </div>
+
+        <a
+            class="button secondary"
+            href="{{ url_for('admin.opportunities') }}"
+        >
+            &larr; Back to Opportunities
+        </a>
+
+    </div>
+
+
+    <div class="admin-panel">
+
+        <form
+            method="post"
+            action="{{ url_for('admin.edit_opportunity', opportunity_id=opportunity.id) }}"
+            class="admin-form"
+        >
+
+            <label>
+                Title
+
+                <input
+                    name="title"
+                    value="{{ opportunity.title }}"
+                    required
+                >
+            </label>
+
+
+            <label>
+                Category
+
+                <input
+                    name="category"
+                    value="{{ opportunity.category }}"
+                >
+            </label>
+
+
+            <label>
+                Description
+
+                <textarea
+                    name="description"
+                    rows="8"
+                    required
+                >{{ opportunity.description }}</textarea>
+            </label>
+
+
+            <label>
+                Application URL
+
+                <input
+                    name="application_url"
+                    type="url"
+                    value="{{ opportunity.application_url or '' }}"
+                >
+            </label>
+
+
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+
+                <button
+                    class="button"
+                    type="submit"
+                >
+                    Save Changes
+                </button>
+
+                <a
+                    class="button secondary"
+                    href="{{ url_for('admin.opportunities') }}"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

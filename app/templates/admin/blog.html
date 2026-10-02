@@ -1,1 +1,205 @@
-{% extends "base.html" %}{% block title %}Blog Moderation{% endblock %}{% block content %}<section class="page"><p class="eyebrow">ADMIN</p><h1>Blog moderation</h1><div class="admin-panel"><div class="table-wrap"><table><thead><tr><th>Title</th><th>Author</th><th>Category</th><th>Status</th><th>Submitted</th><th>Action</th></tr></thead><tbody>{% for post in posts %}<tr><td>{{ post.title }}</td><td>{{ post.author.username }}</td><td>{{ post.category }}</td><td><span class="badge {{ post.status }}">{{ post.status }}</span></td><td>{{ post.created_at.strftime('%Y-%m-%d') }}</td><td>{% if post.status == 'pending' %}<form class="inline-form" method="post" action="{{ url_for('admin.moderate_blog', post_id=post.id, action='approve') }}"><button class="button small" type="submit">Approve</button></form><form class="inline-form" method="post" action="{{ url_for('admin.moderate_blog', post_id=post.id, action='reject') }}"><button class="button small danger" type="submit">Reject</button></form>{% else %}<span class="muted">Reviewed</span>{% endif %}</td></tr>{% else %}<tr><td colspan="6">No blog posts yet.</td></tr>{% endfor %}</tbody></table></div></div></section>{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Blog Moderation{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+
+<p class="eyebrow">ADMIN</p>
+
+<h1>Blog moderation</h1>
+
+<div class="admin-panel">
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for post in posts %}
+
+                <tr>
+
+                    <!-- TITLE -->
+
+                    <td>
+                        <strong>
+                            {{ post.title }}
+                        </strong>
+                    </td>
+
+
+                    <!-- AUTHOR -->
+
+                    <td>
+                        {{ post.author.username }}
+                    </td>
+
+
+                    <!-- CATEGORY -->
+
+                    <td>
+                        {{ post.category }}
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        <span class="badge {{ post.status }}">
+                            {{ post.status }}
+                        </span>
+
+                    </td>
+
+
+                    <!-- DATE -->
+
+                    <td>
+                        {{ post.created_at.strftime('%Y-%m-%d') }}
+                    </td>
+
+
+                    <!-- ACTIONS -->
+
+                    <td>
+
+                        <div
+                            style="
+                                display:flex;
+                                gap:8px;
+                                flex-wrap:wrap;
+                                align-items:center;
+                            "
+                        >
+
+                            <!-- EDIT -->
+
+                            <a
+                                class="button small"
+                                href="{{ url_for(
+                                    'admin.edit_blog',
+                                    post_id=post.id
+                                ) }}"
+                            >
+                                Edit
+                            </a>
+
+
+                            <!-- APPROVE / REJECT -->
+
+                            {% if post.status == "pending" %}
+
+                            <form
+                                class="inline-form"
+                                method="post"
+                                action="{{ url_for(
+                                    'admin.moderate_blog',
+                                    post_id=post.id,
+                                    action='approve'
+                                ) }}"
+                            >
+
+                                <button
+                                    class="button small"
+                                    type="submit"
+                                >
+                                    Approve
+                                </button>
+
+                            </form>
+
+
+                            <form
+                                class="inline-form"
+                                method="post"
+                                action="{{ url_for(
+                                    'admin.moderate_blog',
+                                    post_id=post.id,
+                                    action='reject'
+                                ) }}"
+                            >
+
+                                <button
+                                    class="button small danger"
+                                    type="submit"
+                                >
+                                    Reject
+                                </button>
+
+                            </form>
+
+                            {% endif %}
+
+
+                            <!-- DELETE -->
+
+                            <form
+                                class="inline-form"
+                                method="post"
+                                action="{{ url_for(
+                                    'admin.delete_blog',
+                                    post_id=post.id
+                                ) }}"
+                                onsubmit="return confirm(
+                                    'Are you sure you want to permanently delete this blog post?'
+                                );"
+                            >
+
+                                <button
+                                    class="button small danger"
+                                    type="submit"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="6">
+                        No blog posts yet.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+</section>
+
+{% endblock %}

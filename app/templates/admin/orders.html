@@ -1,1 +1,308 @@
-{% extends "base.html" %}{% block title %}Orders{% endblock %}{% block content %}<section class="page"><p class="eyebrow">BUSINESS</p><h1>Orders</h1><div class="admin-panel"><div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Payment</th><th>Status</th><th>Update</th></tr></thead><tbody>{% for order in orders %}<tr><td>#{{ order.id }}</td><td>{{ order.user.username }}</td><td>KSh {{ '%.2f'|format(order.total) }}</td><td>{{ order.payment_status }}</td><td>{{ order.order_status }}</td><td><form class="inline-form" method="post" action="{{ url_for('admin.order_status', order_id=order.id) }}"><select name="order_status"><option value="pending">Pending</option><option value="processing">Processing</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select><button class="button small" type="submit">Save</button></form></td></tr>{% else %}<tr><td colspan="6">No orders yet.</td></tr>{% endfor %}</tbody></table></div></div></section>{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">BUSINESS</p>
+
+            <h1>Orders</h1>
+
+            <p>
+                View customer orders, payment status,
+                and manage order progress.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-panel">
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for order in orders %}
+
+                    <tr>
+
+                        <!-- ORDER -->
+
+                        <td>
+
+                            <strong>
+                                #{{ order.id }}
+                            </strong>
+
+                            <br>
+
+                            <span class="muted">
+                                {{ order.created_at.strftime("%Y-%m-%d %H:%M") }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- CUSTOMER -->
+
+                        <td>
+
+                            <strong>
+                                {{ order.user.username }}
+                            </strong>
+
+                            <br>
+
+                            <span class="muted">
+                                {{ order.user.email }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- TOTAL -->
+
+                        <td>
+
+                            <strong>
+                                KSh {{ '%.2f'|format(order.total) }}
+                            </strong>
+
+                        </td>
+
+
+                        <!-- PAYMENT -->
+
+                        <td>
+
+                            {% if order.payment_status == "paid" %}
+
+                            <span class="badge approved">
+                                Paid
+                            </span>
+
+                            {% elif order.payment_status == "pending" %}
+
+                            <span class="badge">
+                                Pending
+                            </span>
+
+                            {% elif order.payment_status == "failed" %}
+
+                            <span class="badge rejected">
+                                Failed
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge">
+                                {{ order.payment_status|capitalize }}
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- ORDER STATUS -->
+
+                        <td>
+
+                            {% if order.order_status == "completed" %}
+
+                            <span class="badge approved">
+                                Completed
+                            </span>
+
+                            {% elif order.order_status == "cancelled" %}
+
+                            <span class="badge rejected">
+                                Cancelled
+                            </span>
+
+                            {% elif order.order_status == "processing" %}
+
+                            <span class="badge">
+                                Processing
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge">
+                                Pending
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
+
+                        <td>
+
+                            <div
+                                style="
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: stretch;
+                                    gap: 8px;
+                                    min-width: 150px;
+                                "
+                            >
+
+                                <!-- VIEW DETAILS -->
+
+                                <a
+                                    class="button small secondary"
+                                    href="{{ url_for(
+                                        'admin.order_details',
+                                        order_id=order.id
+                                    ) }}"
+                                    style="
+                                        width: 100%;
+                                        box-sizing: border-box;
+                                        text-align: center;
+                                    "
+                                >
+                                    View Details
+                                </a>
+
+
+                                <!-- UPDATE STATUS -->
+
+                                <form
+                                    method="post"
+                                    action="{{ url_for(
+                                        'admin.order_status',
+                                        order_id=order.id
+                                    ) }}"
+                                    style="
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 8px;
+                                        width: 100%;
+                                    "
+                                >
+
+                                    <select
+                                        name="order_status"
+                                        style="
+                                            width: 100%;
+                                            box-sizing: border-box;
+                                        "
+                                    >
+
+                                        <option
+                                            value="pending"
+                                            {% if order.order_status == "pending" %}
+                                            selected
+                                            {% endif %}
+                                        >
+                                            Pending
+                                        </option>
+
+
+                                        <option
+                                            value="processing"
+                                            {% if order.order_status == "processing" %}
+                                            selected
+                                            {% endif %}
+                                        >
+                                            Processing
+                                        </option>
+
+
+                                        <option
+                                            value="completed"
+                                            {% if order.order_status == "completed" %}
+                                            selected
+                                            {% endif %}
+                                        >
+                                            Completed
+                                        </option>
+
+
+                                        <option
+                                            value="cancelled"
+                                            {% if order.order_status == "cancelled" %}
+                                            selected
+                                            {% endif %}
+                                        >
+                                            Cancelled
+                                        </option>
+
+                                    </select>
+
+
+                                    <button
+                                        class="button small"
+                                        type="submit"
+                                        style="
+                                            width: 100%;
+                                            box-sizing: border-box;
+                                        "
+                                    >
+                                        Save Status
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="6">
+
+                            No orders yet.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Blog{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">ADMIN BLOG</p>
+
+            <h1>Edit Blog Post</h1>
+
+            <p>
+                Update the blog post information below.
+            </p>
+
+        </div>
+
+        <a
+            class="button secondary"
+            href="{{ url_for('admin.blog') }}"
+        >
+            &larr; Back to Blog
+        </a>
+
+    </div>
+
+
+    <div class="admin-panel">
+
+        <form
+            method="post"
+            action="{{ url_for(
+                'admin.edit_blog',
+                post_id=post.id
+            ) }}"
+            class="admin-form"
+        >
+
+            <label>
+
+                Title
+
+                <input
+                    name="title"
+                    value="{{ post.title }}"
+                    required
+                >
+
+            </label>
+
+
+            <label>
+
+                Category
+
+                <input
+                    name="category"
+                    value="{{ post.category }}"
+                >
+
+            </label>
+
+
+            <label>
+
+                Content
+
+                <textarea
+                    name="content"
+                    rows="15"
+                    required
+                >{{ post.content }}</textarea>
+
+            </label>
+
+
+            <div
+                style="
+                    display:flex;
+                    gap:12px;
+                    flex-wrap:wrap;
+                "
+            >
+
+                <button
+                    class="button"
+                    type="submit"
+                >
+                    Save Changes
+                </button>
+
+                <a
+                    class="button secondary"
+                    href="{{ url_for('admin.blog') }}"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -14,7 +14,7 @@
 
             <p>
                 Ticket #{{ ticket.id }}
-                · Customer: <strong>{{ ticket.user.username }}</strong>
+                &middot; Customer: <strong>{{ ticket.user.username }}</strong>
             </p>
         </div>
 
@@ -22,7 +22,7 @@
             class="button secondary"
             href="{{ url_for('admin.support') }}"
         >
-            ← All Tickets
+            &larr; All Tickets
         </a>
 
     </div>

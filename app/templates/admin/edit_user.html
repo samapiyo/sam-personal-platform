@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block content %}
+
+<section class="page">
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">ADMIN USERS</p>
+
+            <h1>Edit User</h1>
+
+            <p>
+                Update the user's account information.
+            </p>
+
+        </div>
+
+        <a
+            class="button secondary"
+            href="{{ url_for('admin.users') }}"
+        >
+            &larr; Back to Users
+        </a>
+
+    </div>
+
+
+    <div class="admin-panel">
+
+        <form
+            method="post"
+            action="{{ url_for(
+                'admin.edit_user',
+                user_id=user.id
+            ) }}"
+            class="admin-form"
+        >
+
+            <label>
+
+                Username
+
+                <input
+                    type="text"
+                    name="username"
+                    value="{{ user.username }}"
+                    maxlength="80"
+                    required
+                >
+
+            </label>
+
+
+            <label>
+
+                Email
+
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ user.email }}"
+                    maxlength="160"
+                    required
+                >
+
+            </label>
+
+
+            <div
+                style="
+                    display:flex;
+                    gap:12px;
+                    flex-wrap:wrap;
+                "
+            >
+
+                <button
+                    class="button"
+                    type="submit"
+                >
+                    Save Changes
+                </button>
+
+                <a
+                    class="button secondary"
+                    href="{{ url_for('admin.users') }}"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

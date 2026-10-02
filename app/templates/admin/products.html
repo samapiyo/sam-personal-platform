@@ -67,21 +67,19 @@
                     >
                 </label>
 
-                <!-- PRODUCT IMAGE URL -->
-
                 <label>
-    Product Image
+                    Product Image
 
-    <input
-        name="image"
-        type="file"
-        accept="image/*"
-    >
+                    <input
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                    >
 
-    <small>
-        Select a product image from your computer.
-    </small>
-</label>
+                    <small>
+                        Select a product image from your computer.
+                    </small>
+                </label>
 
                 <button
                     class="button"
@@ -120,7 +118,10 @@
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                         >
 
-                        <div class="admin-image-placeholder">
+                        <div
+                            class="admin-image-placeholder"
+                            style="display:none;"
+                        >
                             {{ product.name[:1]|upper }}
                         </div>
 
@@ -145,7 +146,12 @@
 
                         <small>
                             KSh {{ '%.2f'|format(product.price) }}
-                            · Stock {{ product.stock }}
+                            &middot;
+                            Stock {{ product.stock }}
+                        </small>
+
+                        <small>
+                            {{ product.category }}
                         </small>
 
                         {% if product.image_url %}
@@ -162,24 +168,72 @@
 
                         {% endif %}
 
+                        <small>
+                            Status:
+                            <strong>
+                                {{ 'Published' if product.is_active else 'Hidden' }}
+                            </strong>
+                        </small>
+
                     </div>
 
 
-                    <!-- PUBLISH / HIDE -->
+                    <!-- PRODUCT ACTIONS -->
 
-                    <form
-                        method="post"
-                        action="{{ url_for('admin.toggle_product', product_id=product.id) }}"
+                    <div
+                        style="
+                            display:flex;
+                            flex-direction:column;
+                            gap:8px;
+                            min-width:110px;
+                        "
                     >
 
-                        <button
-                            class="button small"
-                            type="submit"
-                        >
-                            {{ 'Hide' if product.is_active else 'Publish' }}
-                        </button>
+                        <!-- EDIT -->
 
-                    </form>
+                        <a
+                            class="button small"
+                            href="{{ url_for('admin.edit_product', product_id=product.id) }}"
+                        >
+                            Edit
+                        </a>
+
+
+                        <!-- PUBLISH / HIDE -->
+
+                        <form
+                            method="post"
+                            action="{{ url_for('admin.toggle_product', product_id=product.id) }}"
+                        >
+
+                            <button
+                                class="button small"
+                                type="submit"
+                            >
+                                {{ 'Hide' if product.is_active else 'Publish' }}
+                            </button>
+
+                        </form>
+
+
+                        <!-- DELETE -->
+
+                        <form
+                            method="post"
+                            action="{{ url_for('admin.delete_product', product_id=product.id) }}"
+                            onsubmit="return confirm('Are you sure you want to permanently delete this product?');"
+                        >
+
+                            <button
+                                class="button small"
+                                type="submit"
+                            >
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </div>
 
                 </div>
 
