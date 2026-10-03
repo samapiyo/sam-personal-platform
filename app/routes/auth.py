@@ -1,10 +1,10 @@
 import os
 import requests
 import secrets
-import smtplib
+
 
 from datetime import datetime, timedelta, timezone
-from email.message import EmailMessage
+
 
 from flask import (
     Blueprint,
