@@ -1,3 +1,5 @@
+import os
+import requests
 import secrets
 import smtplib
 
@@ -78,115 +80,102 @@ def record(action):
 # SEND PASSWORD RESET EMAIL
 # =========================================
 
-def send_reset_email(
-    user,
-    reset_url,
-):
+def send_reset_email(user, reset_link):
+    """Send a password reset email using the Resend HTTPS API."""
 
-    mail_server = current_app.config.get(
-        "MAIL_SERVER",
-        "smtp.gmail.com",
-    )
+    resend_api_key = os.getenv("RESEND_API_KEY")
 
-    mail_port = current_app.config.get(
-        "MAIL_PORT",
-        587,
-    )
-
-    mail_username = current_app.config.get(
-        "MAIL_USERNAME",
-        "",
-    )
-
-    mail_password = current_app.config.get(
-        "MAIL_PASSWORD",
-        "",
-    )
-
-    mail_default_sender = current_app.config.get(
-        "MAIL_DEFAULT_SENDER",
-        "",
-    )
-
-    if not mail_username or not mail_password:
-
+    if not resend_api_key:
         current_app.logger.error(
-            "Email credentials are not configured."
+            "RESEND_API_KEY is not configured."
         )
-
         return False
 
-    sender = (
-        mail_default_sender
-        or mail_username
+    resend_from_email = os.getenv(
+        "RESEND_FROM_EMAIL",
+        "onboarding@resend.dev",
     )
 
-    message = EmailMessage()
+    html = f"""
+    <html>
+        <body>
+            <h2>SAMTECH SOLUTIONS</h2>
 
-    message["Subject"] = (
-        "SAMTECH SOLUTIONS - Password Reset"
-    )
+            <p>Hello {user.username},</p>
 
-    message["From"] = sender
-    message["To"] = user.email
+            <p>
+                We received a request to reset the password
+                for your SAMTECH SOLUTIONS account.
+            </p>
 
-    message.set_content(
-        f"""
-Hello {user.username},
+            <p>
+                Click the button below to create a new password:
+            </p>
 
-We received a request to reset the password
-for your SAMTECH SOLUTIONS account.
+            <p>
+                <a
+                    href="{reset_link}"
+                    style="
+                        display: inline-block;
+                        padding: 12px 20px;
+                        background-color: #2563eb;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 6px;
+                    "
+                >
+                    Reset My Password
+                </a>
+            </p>
 
-Use the link below to create a new password:
+            <p>
+                This link will expire in 30 minutes.
+            </p>
 
-{reset_url}
+            <p>
+                If you did not request a password reset,
+                you can safely ignore this email.
+            </p>
 
-This link will expire in 30 minutes.
+            <p>
+                Regards,<br>
+                SAMTECH SOLUTIONS
+            </p>
+        </body>
+    </html>
+    """
 
-If you did not request a password reset,
-you can safely ignore this email.
-
-Regards,
-
-SAMTECH SOLUTIONS
-"""
-    )
+    payload = {
+        "from": resend_from_email,
+        "to": [user.email],
+        "subject": "Reset your SAMTECH SOLUTIONS password",
+        "html": html,
+    }
 
     try:
-
-        with smtplib.SMTP(
-            mail_server,
-            mail_port,
+        response = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {resend_api_key}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
             timeout=20,
-        ) as smtp:
+        )
 
-            smtp.ehlo()
+        response.raise_for_status()
 
-            if current_app.config.get(
-                "MAIL_USE_TLS",
-                True,
-            ):
-
-                smtp.starttls()
-                smtp.ehlo()
-
-            smtp.login(
-                mail_username,
-                mail_password,
-            )
-
-            smtp.send_message(
-                message
-            )
+        current_app.logger.info(
+            "Password reset email sent successfully."
+        )
 
         return True
 
-    except Exception:
-
-        current_app.logger.exception(
-            "Failed to send password reset email."
+    except requests.RequestException as exc:
+        current_app.logger.error(
+            "Failed to send password reset email: %s",
+            exc,
         )
-
         return False
 
 
