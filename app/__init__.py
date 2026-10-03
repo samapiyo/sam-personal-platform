@@ -83,6 +83,15 @@ def create_app():
     app.register_blueprint(business_bp)
     app.register_blueprint(opportunities_bp)
 
+    @app.route("/ads.txt")
+    def ads_txt():
+        return (
+            "google.com, pub-4993367308877776, DIRECT, "
+            "f08c47fec0942fa0"
+        ), 200, {
+            "Content-Type": "text/plain"
+        }
+
     with app.app_context():
         from . import models
 
